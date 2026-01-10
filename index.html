@@ -1,1 +1,58 @@
-# Fonn
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONN 2.1 - Panel de Control</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #chat-container { width: 400px; height: 600px; background: #1e1e1e; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #header { padding: 20px; background: #333; text-align: center; border-bottom: 2px solid #444; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 15px; border-radius: 10px; max-width: 80%; }
+        .user { background: #007bff; align-self: flex-end; }
+        .ai { background: #444; align-self: flex-start; border-left: 4px solid #00ff88; }
+        #input-area { display: flex; padding: 15px; background: #252525; }
+        input { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #333; color: white; outline: none; }
+        button { margin-left: 10px; padding: 10px 20px; border: none; border-radius: 5px; background: #00ff88; color: #121212; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="header">
+        <strong>FONN 2.1</strong><br><small>English & Español</small>
+    </div>
+    <div id="messages">
+        <div class="msg ai">Hola, soy Fonn 2.1. ¿Qué deseas enseñarme hoy?</div>
+    </div>
+    <div id="input-area">
+        <input type="text" id="userInput" placeholder="Escribe aquí...">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const messages = document.getElementById('messages');
+        
+        if (input.value.trim() !== "") {
+            // Mensaje del Usuario
+            messages.innerHTML += `<div class="msg user">${input.value}</div>`;
+            
+            // Respuesta simulada (Aquí conectarás la base de datos más adelante)
+            setTimeout(() => {
+                messages.innerHTML += `<div class="msg ai">He recibido tu mensaje en FONN 2.1. Estoy aprendiendo...</div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+
+            input.value = "";
+            messages.scrollTop = messages.scrollHeight;
+        }
+    }
+</script>
+
+</body>
+</html>
+
