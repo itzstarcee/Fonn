@@ -3,195 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FONN 2.1 | Discord Style</title>
+    <title>FONN 2.1 - Panel de IA</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --discord-gray: #36393f;
-            --discord-dark: #2f3136;
-            --discord-text: #dcddde;
-            --discord-input: #40444b;
-            --discord-green: #43b581;
-            --discord-blurple: #5865f2;
-        }
-
         body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            background: var(--discord-gray); 
-            color: var(--discord-text); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #121212; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
             margin: 0; 
+        }
+        #chat-container { 
+            width: 400px; 
+            height: 600px; 
+            background: #1e1e1e; 
+            border-radius: 15px; 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border: 1px solid #333;
         }
-
-        /* Encabezado simple */
         #header { 
-            height: 48px; 
-            padding: 0 16px; 
-            display: flex; 
-            align-items: center; 
-            background: var(--discord-gray);
-            border-bottom: 1px solid #262729; 
-            font-weight: bold; 
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); 
+            padding: 20px; 
+            background: #333; 
+            text-align: center; 
+            border-bottom: 2px solid #00ff88; 
         }
-
-        /* Area de mensajes */
         #messages { 
             flex: 1; 
+            padding: 20px; 
             overflow-y: auto; 
-            padding: 20px 0; 
-        }
-
-        .message-group { 
-            padding: 5px 20px; 
-            display: flex; 
-            align-items: flex-start; 
-        }
-
-        .message-group:hover { 
-            background: rgba(4, 4, 5, 0.07); 
-        }
-
-        .avatar { 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            margin-right: 16px; 
-            background: var(--discord-blurple); 
-            flex-shrink: 0; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: bold; 
-            color: white; 
-        }
-
-        .ai-avatar { 
-            background: var(--discord-green); 
-        }
-
-        .msg-content { 
             display: flex; 
             flex-direction: column; 
+            gap: 12px; 
         }
-
-        .author { 
-            font-weight: 500; 
-            color: white; 
+        .msg { 
+            padding: 10px 15px; 
+            border-radius: 12px; 
+            max-width: 80%; 
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .user { 
+            background: #007bff; 
+            align-self: flex-end; 
+            border-bottom-right-radius: 2px;
+        }
+        .ai { 
+            background: #444; 
+            align-self: flex-start; 
+            border-bottom-left-radius: 2px;
+            border-left: 4px solid #00ff88; 
+        }
+        #input-area { 
             display: flex; 
-            align-items: center; 
+            padding: 15px; 
+            background: #252525; 
         }
-
-        .author .time { 
-            font-size: 12px; 
-            color: #72767d; 
-            margin-left: 8px; 
-            font-weight: 400; 
-        }
-
-        .text { 
-            font-size: 15px; 
-            margin-top: 4px; 
-            color: #dcddde; 
-        }
-
-        /* Caja de entrada */
-        #input-container { 
-            padding: 0 20px 24px 20px; 
-            background: var(--discord-gray);
-        }
-
-        #input-wrapper { 
-            background: var(--discord-input); 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 16px; 
-            height: 44px; 
-        }
-
         input { 
-            background: transparent; 
-            border: none; 
-            color: white; 
             flex: 1; 
-            font-size: 15px; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #333; 
+            color: white; 
             outline: none; 
         }
-
-        input::placeholder { 
-            color: #72767d; 
+        button { 
+            margin-left: 10px; 
+            padding: 10px 18px; 
+            border: none; 
+            border-radius: 8px; 
+            background: #00ff88; 
+            color: #121212; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
         }
+        button:hover { background: #00cc6e; }
     </style>
 </head>
 <body>
 
-    <div id="header"># fonn-2.1-ia</div>
-    
-    <div id="messages">
-        </div>
-
-    <div id="input-container">
-        <div id="input-wrapper">
-            <input type="text" id="userInput" placeholder="Enviar mensaje a #fonn-2.1-ia" onkeypress="checkEnter(event)">
-        </div>
+<div id="chat-container">
+    <div id="header">
+        <strong>FONN 2.1</strong><br><small style="color: #888;">Sistema de Aprendizaje Activo</small>
     </div>
+    <div id="messages">
+        <div class="msg ai">¡Hola! Soy FONN 2.1.<br><br>• <b>Enseñar:</b> Hola = Qué tal<br>• <b>Borrar:</b> -Hola</div>
+    </div>
+    <div id="input-area">
+        <input type="text" id="userInput" placeholder="Escribe algo..." onkeypress="if(event.key==='Enter') handleChat()">
+        <button onclick="handleChat()">Enviar</button>
+    </div>
+</div>
 
 <script>
+    // Tu conexión real a Supabase
     const SUPABASE_URL = 'https://uhtxgxedkufnxkmbufvy.supabase.co';
     const SUPABASE_KEY = 'sb_publishable__aNQp_aBHJ6MMGYA2AIwXA_ApjnWs5j';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    function checkEnter(e) {
-        if (e.key === 'Enter') handleChat();
-    }
 
     async function handleChat() {
         const input = document.getElementById('userInput');
         const text = input.value.trim();
         if (!text) return;
 
-        addMessage(text, 'Tú', false);
+        addMessage(text, 'user');
         input.value = "";
 
         if (text.includes('=')) {
+            // Lógica para ENSEÑAR
             const [entrada, respuesta] = text.split('=').map(t => t.trim());
             const { error } = await _supabase.from('memoria').insert([{ entrada, respuesta }]);
-            addMessage(error ? "Error" : `Aprendido: **${entrada}**`, 'FONN 2.1', true);
+            addMessage(error ? "Hubo un error al guardar." : `¡Entendido! Ahora cuando digas "<b>${entrada}</b>", responderé "<b>${respuesta}</b>".`, 'ai');
         } 
         else if (text.startsWith('-')) {
-            const borrar = text.substring(1).trim();
-            const { error } = await _supabase.from('memoria').delete().eq('entrada', borrar);
-            addMessage(error ? "Error" : `Borrado: **${borrar}**`, 'FONN 2.1', true);
+            // Lógica para BORRAR
+            const palabraABorrar = text.substring(1).trim();
+            const { error } = await _supabase.from('memoria').delete().eq('entrada', palabraABorrar);
+            addMessage(error ? "No pude borrarlo." : `He borrado "<b>${palabraABorrar}</b>" de mi memoria.`, 'ai');
         } 
         else {
+            // Lógica para RESPONDER
             const { data } = await _supabase.from('memoria').select('respuesta').eq('entrada', text);
             if (data && data.length > 0) {
-                addMessage(data[0].respuesta, 'FONN 2.1', true);
+                addMessage(data[0].respuesta, 'ai');
             } else {
-                addMessage(`No sé eso aún. Enséñame: \`${text} = tu respuesta\``, 'FONN 2.1', true);
+                addMessage(`Aún no sé qué responder a eso. Enséñame usando el símbolo "="`, 'ai');
             }
         }
     }
 
-    function addMessage(txt, author, isAI) {
-        const container = document.getElementById('messages');
-        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        const html = `
-            <div class="message-group">
-                <div class="avatar ${isAI ? 'ai-avatar' : ''}">${author.charAt(0)}</div>
-                <div class="msg-content">
-                    <div class="author">${author} <span class="time">${now}</span></div>
-                    <div class="text">${txt}</div>
-                </div>
-            </div>`;
-        
-        container.innerHTML += html;
-        container.scrollTop = container.scrollHeight;
+    function addMessage(txt, side) {
+        const messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML += `<div class="msg ${side}">${txt}</div>`;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 </script>
+
 </body>
 </html>
