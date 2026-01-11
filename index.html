@@ -3,77 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FONNGPT 2.1 - Sistema de Aprendizaje</title>
+    <title>Discord | FONN 2.1</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        #chat-container { width: 90%; max-width: 450px; height: 80vh; background: #1a1a1a; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,255,136,0.2); border: 1px solid #333; }
-        #header { padding: 20px; background: #222; text-align: center; border-bottom: 2px solid #00ff88; border-radius: 20px 20px 0 0; }
-        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 12px 16px; border-radius: 15px; max-width: 85%; line-height: 1.4; }
-        .user { background: #007bff; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .ai { background: #333; align-self: flex-start; border-bottom-left-radius: 2px; border-left: 3px solid #00ff88; }
-        #input-area { display: flex; padding: 20px; background: #222; border-radius: 0 0 20px 20px; }
-        input { flex: 1; padding: 12px; border: none; border-radius: 8px; background: #333; color: white; outline: none; }
-        button { margin-left: 10px; padding: 10px 20px; border: none; border-radius: 8px; background: #00ff88; color: #000; font-weight: bold; cursor: pointer; }
-        button:hover { background: #00cc6e; }
+        :root {
+            --discord-gray: #36393f;
+            --discord-dark: #2f3136;
+            --discord-black: #202225;
+            --discord-text: #dcddde;
+            --discord-input: #40444b;
+            --discord-green: #43b581;
+            --discord-blurple: #5865f2;
+        }
+
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: var(--discord-black); color: var(--discord-text); display: flex; height: 100vh; margin: 0; overflow: hidden; }
+
+        /* Barra lateral falsa tipo Discord */
+        #sidebar { width: 240px; background: var(--discord-dark); display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; }
+        .channel { padding: 8px 12px; border-radius: 4px; color: #8e9297; cursor: pointer; display: flex; align-items: center; }
+        .channel:hover { background: #393c43; color: #dcddde; }
+        .channel.active { background: #393c43; color: white; }
+        .channel:before { content: '#'; margin-right: 8px; font-size: 20px; color: #72767d; }
+
+        /* Area de Chat */
+        #main-chat { flex: 1; display: flex; flex-direction: column; background: var(--discord-gray); }
+        #header { height: 48px; padding: 0 16px; display: flex; align-items: center; border-bottom: 1px solid #262729; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        
+        #messages { flex: 1; overflow-y: auto; padding: 20px 0; }
+        .message-group { padding: 5px 20px; display: flex; align-items: flex-start; }
+        .message-group:hover { background: rgba(4, 4, 5, 0.07); }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; margin-right: 16px; background: var(--discord-blurple); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .ai-avatar { background: var(--discord-green); }
+        
+        .msg-content { display: flex; flex-direction: column; }
+        .author { font-weight: 500; color: white; display: flex; align-items: center; }
+        .author .time { font-size: 12px; color: #72767d; margin-left: 8px; font-weight: 400; }
+        .text { font-size: 15px; margin-top: 4px; color: #dcddde; }
+
+        /* Input area */
+        #input-container { padding: 0 20px 24px 20px; }
+        #input-wrapper { background: var(--discord-input); border-radius: 8px; display: flex; align-items: center; padding: 0 16px; height: 44px; }
+        input { background: transparent; border: none; color: white; flex: 1; font-size: 15px; outline: none; }
+        input::placeholder { color: #72767d; }
     </style>
 </head>
 <body>
 
-<div id="chat-container">
-    <div id="header">
-        <strong style="font-size: 1.2em; color: #00ff88;">FONN 2.1</strong><br>
-        <small style="color: #888;">Base de datos conectada</small>
-    </div>
+<div id="sidebar">
+    <div style="color: white; font-weight: bold; margin-bottom: 20px; padding: 5px 10px;">FONN SERVER</div>
+    <div class="channel active">ia-fonn-2-1</div>
+    <div class="channel">aprendizaje</div>
+    <div class="channel">logs-base-datos</div>
+</div>
+
+<div id="main-chat">
+    <div id="header"># ia-fonn-2-1</div>
+    
     <div id="messages">
-        <div class="msg ai">¡Hola! Soy FONN 2.1. Todo lo que me escribas se guardará en mi memoria de Supabase.</div>
-    </div>
-    <div id="input-area">
-        <input type="text" id="userInput" placeholder="Enséñame algo...">
-        <button onclick="sendMessage()">ENVIAR</button>
+        </div>
+
+    <div id="input-container">
+        <div id="input-wrapper">
+            <input type="text" id="userInput" placeholder="Enviar mensaje a #ia-fonn-2-1" onkeypress="checkEnter(event)">
+        </div>
     </div>
 </div>
 
 <script>
-    // Configuración con TUS DATOS proporcionados
     const SUPABASE_URL = 'https://uhtxgxedkufnxkmbufvy.supabase.co';
     const SUPABASE_KEY = 'sb_publishable__aNQp_aBHJ6MMGYA2AIwXA_ApjnWs5j';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function sendMessage() {
+    function checkEnter(e) {
+        if (e.key === 'Enter') handleChat();
+    }
+
+    async function handleChat() {
         const input = document.getElementById('userInput');
-        const container = document.getElementById('messages');
-        const texto = input.value.trim();
+        const text = input.value.trim();
+        if (!text) return;
 
-        if (texto === "") return;
-
-        // 1. Mostrar mensaje del usuario
-        container.innerHTML += `<div class="msg user">${texto}</div>`;
+        addMessage(text, 'Tú', false);
         input.value = "";
-        container.scrollTop = container.scrollHeight;
 
-        // 2. Respuesta temporal de la IA
-        const respuestaIA = "He aprendido esto y lo he guardado en mi tabla 'memoria'.";
-
-        try {
-            // 3. ENVIAR A SUPABASE (Guardar en la tabla)
-            const { error } = await _supabase
-                .from('memoria')
-                .insert([{ entrada: texto, respuesta: respuestaIA }]);
-
-            if (error) throw error;
-
-            // 4. Mostrar respuesta de FONN
-            setTimeout(() => {
-                container.innerHTML += `<div class="msg ai">${respuestaIA}</div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 600);
-
-        } catch (err) {
-            console.error("Error:", err);
-            container.innerHTML += `<div class="msg ai" style="border-left-color: red;">Error al guardar en memoria: ${err.message}</div>`;
+        if (text.includes('=')) {
+            const [entrada, respuesta] = text.split('=').map(t => t.trim());
+            const { error } = await _supabase.from('memoria').insert([{ entrada, respuesta }]);
+            addMessage(error ? "Error de conexión" : `He guardado: **${entrada}** -> **${respuesta}**`, 'FONN 2.1', true);
+        } 
+        else if (text.startsWith('-')) {
+            const borrar = text.substring(1).trim();
+            const { error } = await _supabase.from('memoria').delete().eq('entrada', borrar);
+            addMessage(error ? "No pude borrarlo" : `Eliminado de mi base de datos: **${borrar}**`, 'FONN 2.1', true);
+        } 
+        else {
+            const { data } = await _supabase.from('memoria').select('respuesta').eq('entrada', text);
+            if (data && data.length > 0) {
+                addMessage(data[0].respuesta, 'FONN 2.1', true);
+            } else {
+                addMessage(`No sé qué decir sobre eso. Enséñame así: \`${text} = tu respuesta\``, 'FONN 2.1', true);
+            }
         }
+    }
+
+    function addMessage(txt, author, isAI) {
+        const container = document.getElementById('messages');
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const avatarChar = author.charAt(0).toUpperCase();
+        
+        const html = `
+            <div class="message-group">
+                <div class="avatar ${isAI ? 'ai-avatar' : ''}">${avatarChar}</div>
+                <div class="msg-content">
+                    <div class="author">${author} <span class="time">Hoy a las ${now}</span></div>
+                    <div class="text">${txt}</div>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML += html;
+        container.scrollTop = container.scrollHeight;
     }
 </script>
 
