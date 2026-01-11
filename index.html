@@ -3,138 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FONN 2.1 - Panel de IA</title>
+    <title>FONN 2.1 - Inteligencia Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #121212; 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        #chat-container { 
-            width: 400px; 
-            height: 600px; 
-            background: #1e1e1e; 
-            border-radius: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            border: 1px solid #333;
-        }
-        #header { 
-            padding: 20px; 
-            background: #333; 
-            text-align: center; 
-            border-bottom: 2px solid #00ff88; 
-        }
-        #messages { 
-            flex: 1; 
-            padding: 20px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-        .msg { 
-            padding: 10px 15px; 
-            border-radius: 12px; 
-            max-width: 80%; 
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .user { 
-            background: #007bff; 
-            align-self: flex-end; 
-            border-bottom-right-radius: 2px;
-        }
-        .ai { 
-            background: #444; 
-            align-self: flex-start; 
-            border-bottom-left-radius: 2px;
-            border-left: 4px solid #00ff88; 
-        }
-        #input-area { 
-            display: flex; 
-            padding: 15px; 
-            background: #252525; 
-        }
-        input { 
-            flex: 1; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            background: #333; 
-            color: white; 
-            outline: none; 
-        }
-        button { 
-            margin-left: 10px; 
-            padding: 10px 18px; 
-            border: none; 
-            border-radius: 8px; 
-            background: #00ff88; 
-            color: #121212; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-        button:hover { background: #00cc6e; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #chat-container { width: 400px; height: 600px; background: #1e1e1e; border-radius: 15px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; }
+        #header { padding: 20px; background: #333; text-align: center; border-bottom: 2px solid #00ff88; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 10px 15px; border-radius: 12px; max-width: 80%; font-size: 14px; line-height: 1.4; }
+        .user { background: #007bff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .ai { background: #444; align-self: flex-start; border-bottom-left-radius: 2px; border-left: 4px solid #00ff88; }
+        .system { background: #555; align-self: center; font-size: 11px; border-radius: 5px; color: #aaa; }
+        #input-area { display: flex; padding: 15px; background: #252525; }
+        input { flex: 1; padding: 12px; border: none; border-radius: 8px; background: #333; color: white; outline: none; }
+        button { margin-left: 10px; padding: 10px 18px; border: none; border-radius: 8px; background: #00ff88; color: #121212; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="chat-container">
-    <div id="header">
-        <strong>FONN 2.1</strong><br><small style="color: #888;">Sistema de Aprendizaje Activo</small>
-    </div>
+    <div id="header"><strong>FONN 2.1</strong><br><small>Online & Learning</small></div>
     <div id="messages">
-        <div class="msg ai">¡Hola! Soy FONN 2.1.<br><br>• <b>Enseñar:</b> Hola = Qué tal<br>• <b>Borrar:</b> -Hola</div>
+        <div class="msg ai">Hola, soy FONN 2.1. Puedo hablar inglés y español. <br><br>Prueba a decirme <b>"busca en google [lo que quieras]"</b></div>
     </div>
     <div id="input-area">
-        <input type="text" id="userInput" placeholder="Escribe algo..." onkeypress="if(event.key==='Enter') handleChat()">
+        <input type="text" id="userInput" placeholder="Escribe algo o busca en Google..." onkeypress="if(event.key==='Enter') handleChat()">
         <button onclick="handleChat()">Enviar</button>
     </div>
 </div>
 
 <script>
-    // Tu conexión real a Supabase
     const SUPABASE_URL = 'https://uhtxgxedkufnxkmbufvy.supabase.co';
     const SUPABASE_KEY = 'sb_publishable__aNQp_aBHJ6MMGYA2AIwXA_ApjnWs5j';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // "Cosas básicas" que ya sabe Fonn
+    const conocimientoBase = {
+        "hola": "¡Hola! Soy FONN 2.1, tu asistente bilingüe. ¿En qué puedo ayudarte?",
+        "hello": "Hello! I am FONN 2.1, your bilingual assistant. How can I help you?",
+        "quien eres": "Soy FONN 2.1, un modelo de IA diseñado para aprender y navegar.",
+        "who are you": "I am FONN 2.1, an AI model designed to learn and navigate.",
+        "que hora es": `Son las ${new Date().toLocaleTimeString()}`,
+        "adios": "¡Hasta pronto! Estaré aquí si me necesitas.",
+        "bye": "Goodbye! I'll be here if you need me."
+    };
+
     async function handleChat() {
         const input = document.getElementById('userInput');
-        const text = input.value.trim();
+        const text = input.value.trim().toLowerCase();
         if (!text) return;
 
-        addMessage(text, 'user');
+        addMessage(input.value, 'user');
         input.value = "";
 
-        if (text.includes('=')) {
-            // Lógica para ENSEÑAR
-            const [entrada, respuesta] = text.split('=').map(t => t.trim());
-            const { error } = await _supabase.from('memoria').insert([{ entrada, respuesta }]);
-            addMessage(error ? "Hubo un error al guardar." : `¡Entendido! Ahora cuando digas "<b>${entrada}</b>", responderé "<b>${respuesta}</b>".`, 'ai');
+        // 1. SISTEMA DE BÚSQUEDA EN GOOGLE
+        if (text.includes("busca en google") || text.includes("search on google")) {
+            const query = text.replace("busca en google", "").replace("search on google", "").trim();
+            addMessage(`Abriendo búsqueda en Google para: <b>${query}</b>...`, 'ai');
+            setTimeout(() => {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+            }, 1500);
+            return;
+        }
+
+        // 2. BUSCAR EN CONOCIMIENTO BÁSICO
+        if (conocimientoBase[text]) {
+            addMessage(conocimientoBase[text], 'ai');
         } 
-        else if (text.startsWith('-')) {
-            // Lógica para BORRAR
-            const palabraABorrar = text.substring(1).trim();
-            const { error } = await _supabase.from('memoria').delete().eq('entrada', palabraABorrar);
-            addMessage(error ? "No pude borrarlo." : `He borrado "<b>${palabraABorrar}</b>" de mi memoria.`, 'ai');
-        } 
+        // 3. SI NO LO SABE, BUSCAR EN SUPABASE (Memoria aprendida)
         else {
-            // Lógica para RESPONDER
             const { data } = await _supabase.from('memoria').select('respuesta').eq('entrada', text);
             if (data && data.length > 0) {
                 addMessage(data[0].respuesta, 'ai');
             } else {
-                addMessage(`Aún no sé qué responder a eso. Enséñame usando el símbolo "="`, 'ai');
+                addMessage("No tengo esa información en mi memoria base ni en Supabase. ¿Quieres que lo <b>busque en Google</b> por ti?", 'ai');
             }
         }
     }
@@ -145,6 +87,5 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 </script>
-
 </body>
 </html>
