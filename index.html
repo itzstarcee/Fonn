@@ -3,56 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FONN 2.1 - Panel de Control</title>
+    <title>FONN 2.1 - Sistema de Aprendizaje</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        #chat-container { width: 400px; height: 600px; background: #1e1e1e; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #header { padding: 20px; background: #333; text-align: center; border-bottom: 2px solid #444; }
-        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px 15px; border-radius: 10px; max-width: 80%; }
-        .user { background: #007bff; align-self: flex-end; }
-        .ai { background: #444; align-self: flex-start; border-left: 4px solid #00ff88; }
-        #input-area { display: flex; padding: 15px; background: #252525; }
-        input { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #333; color: white; outline: none; }
-        button { margin-left: 10px; padding: 10px 20px; border: none; border-radius: 5px; background: #00ff88; color: #121212; font-weight: bold; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #chat-container { width: 90%; max-width: 450px; height: 80vh; background: #1a1a1a; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,255,136,0.2); border: 1px solid #333; }
+        #header { padding: 20px; background: #222; text-align: center; border-bottom: 2px solid #00ff88; border-radius: 20px 20px 0 0; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px 16px; border-radius: 15px; max-width: 85%; line-height: 1.4; }
+        .user { background: #007bff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .ai { background: #333; align-self: flex-start; border-bottom-left-radius: 2px; border-left: 3px solid #00ff88; }
+        #input-area { display: flex; padding: 20px; background: #222; border-radius: 0 0 20px 20px; }
+        input { flex: 1; padding: 12px; border: none; border-radius: 8px; background: #333; color: white; outline: none; }
+        button { margin-left: 10px; padding: 10px 20px; border: none; border-radius: 8px; background: #00ff88; color: #000; font-weight: bold; cursor: pointer; }
+        button:hover { background: #00cc6e; }
     </style>
 </head>
 <body>
 
 <div id="chat-container">
     <div id="header">
-        <strong>FONN 2.1</strong><br><small>English & Español</small>
+        <strong style="font-size: 1.2em; color: #00ff88;">FONN 2.1</strong><br>
+        <small style="color: #888;">Base de datos conectada</small>
     </div>
     <div id="messages">
-        <div class="msg ai">Hola, soy Fonn 2.1. ¿Qué deseas enseñarme hoy?</div>
+        <div class="msg ai">¡Hola! Soy FONN 2.1. Todo lo que me escribas se guardará en mi memoria de Supabase.</div>
     </div>
     <div id="input-area">
-        <input type="text" id="userInput" placeholder="Escribe aquí...">
-        <button onclick="sendMessage()">Enviar</button>
+        <input type="text" id="userInput" placeholder="Enséñame algo...">
+        <button onclick="sendMessage()">ENVIAR</button>
     </div>
 </div>
 
 <script>
-    function sendMessage() {
-        const input = document.getElementById('userInput');
-        const messages = document.getElementById('messages');
-        
-        if (input.value.trim() !== "") {
-            // Mensaje del Usuario
-            messages.innerHTML += `<div class="msg user">${input.value}</div>`;
-            
-            // Respuesta simulada (Aquí conectarás la base de datos más adelante)
-            setTimeout(() => {
-                messages.innerHTML += `<div class="msg ai">He recibido tu mensaje en FONN 2.1. Estoy aprendiendo...</div>`;
-                messages.scrollTop = messages.scrollHeight;
-            }, 1000);
+    // Configuración con TUS DATOS proporcionados
+    const SUPABASE_URL = 'https://uhtxgxedkufnxkmbufvy.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable__aNQp_aBHJ6MMGYA2AIwXA_ApjnWs5j';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            input.value = "";
-            messages.scrollTop = messages.scrollHeight;
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const container = document.getElementById('messages');
+        const texto = input.value.trim();
+
+        if (texto === "") return;
+
+        // 1. Mostrar mensaje del usuario
+        container.innerHTML += `<div class="msg user">${texto}</div>`;
+        input.value = "";
+        container.scrollTop = container.scrollHeight;
+
+        // 2. Respuesta temporal de la IA
+        const respuestaIA = "He aprendido esto y lo he guardado en mi tabla 'memoria'.";
+
+        try {
+            // 3. ENVIAR A SUPABASE (Guardar en la tabla)
+            const { error } = await _supabase
+                .from('memoria')
+                .insert([{ entrada: texto, respuesta: respuestaIA }]);
+
+            if (error) throw error;
+
+            // 4. Mostrar respuesta de FONN
+            setTimeout(() => {
+                container.innerHTML += `<div class="msg ai">${respuestaIA}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 600);
+
+        } catch (err) {
+            console.error("Error:", err);
+            container.innerHTML += `<div class="msg ai" style="border-left-color: red;">Error al guardar en memoria: ${err.message}</div>`;
         }
     }
 </script>
 
 </body>
 </html>
-
