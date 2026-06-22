@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Global Polls - Material You</title>
+    <title>Global Polls - Secure Edition</title>
     <style>
         :root {
             --md-bg: #141218;
@@ -29,14 +29,8 @@
         }
 
         body {
-            background-color: var(--md-bg);
-            color: var(--md-text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px;
-            overflow-x: hidden;
+            background-color: var(--md-bg); color: var(--md-text);
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; overflow-x: hidden;
         }
 
         @keyframes fadeInUp {
@@ -44,48 +38,33 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .app-container {
-            width: 100%;
-            max-width: 460px;
-            margin-top: 8px;
-        }
+        .app-container { width: 100%; max-width: 460px; margin-top: 8px; }
 
         .card {
-            background-color: var(--md-surface);
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 16px;
-            border: none;
-            animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--md-surface); border-radius: 28px; padding: 24px; margin-bottom: 16px; border: none;
+            animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both; transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
 
         h2 { font-size: 1.35rem; margin-bottom: 18px; font-weight: 500; color: var(--md-text); }
         h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--md-text-variant); font-weight: 500; }
         
-        input, textarea {
+        input {
             width: 100%; background-color: var(--md-surface-variant); border: 1px solid var(--md-outline);
             padding: 16px; border-radius: 16px; color: var(--md-text); margin-bottom: 16px; outline: none;
-            font-size: 1rem; transition: all 0.2s cubic-bezier(0.2, 0, 0, 1); user-select: text;
+            font-size: 1rem; transition: all 0.2s ease; user-select: text;
         }
-        input:focus, textarea:focus { border-color: var(--md-primary); border-width: 2px; }
+        input:focus { border-color: var(--md-primary); border-width: 2px; }
 
         button {
             width: 100%; padding: 14px 24px; border-radius: 100px; border: 1px solid var(--md-outline);
             background-color: transparent; color: var(--md-primary); cursor: pointer;
-            font-weight: 500; font-size: 0.95rem; transition: all 0.2s cubic-bezier(0.2, 0, 0, 1); 
-            text-align: center; margin-bottom: 8px;
+            font-weight: 500; font-size: 0.95rem; transition: all 0.2s ease; text-align: center; margin-bottom: 8px;
         }
         button:hover { background-color: rgba(168, 199, 250, 0.08); }
         button:active { transform: scale(0.96); }
 
-        .submit-btn {
-            background-color: var(--md-primary); color: var(--md-on-primary); border: none; font-weight: 600; margin-top: 8px;
-        }
+        .submit-btn { background-color: var(--md-primary); color: var(--md-on-primary); border: none; font-weight: 600; margin-top: 8px; }
         .submit-btn:hover { background-color: #c2dbff; box-shadow: 0 4px 12px rgba(168,199,250,0.2); }
 
         .poll-options { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
@@ -109,9 +88,7 @@
             text-align: center; padding: 12px 4px; font-size: 0.9rem; background-color: transparent; 
             border-radius: 100px; flex: 1; border: none; color: var(--md-text-variant); margin: 0;
         }
-        .tab-btn.active { 
-            background-color: var(--md-secondary-container); color: var(--md-on-secondary-container); font-weight: 600; 
-        }
+        .tab-btn.active { background-color: var(--md-secondary-container); color: var(--md-on-secondary-container); font-weight: 600; }
         
         .hidden { display: none !important; }
         .share-link { margin-top: 14px; font-size: 0.85rem; color: var(--md-primary); word-break: break-all; text-align: center; }
@@ -131,44 +108,20 @@
         .btn-success { background-color: rgba(180, 241, 180, 0.15); color: var(--md-success); }
         .btn-success:hover { background-color: rgba(180, 241, 180, 0.3); }
 
-        .search-container {
-            background-color: var(--md-surface-variant);
-            border-radius: 100px;
-            padding: 4px 8px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 18px;
-            border: 1px solid transparent;
-        }
+        .search-container { background-color: var(--md-surface-variant); border-radius: 100px; padding: 4px 8px; display: flex; align-items: center; margin-bottom: 18px; border: 1px solid transparent; }
         .search-container:focus-within { border-color: var(--md-primary); }
         .search-container input { background: transparent; border: none; margin: 0; padding: 12px 16px; }
 
-        .cookie-banner {
-            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-            width: calc(100% - 32px); max-width: 420px; background-color: var(--md-surface-variant);
-            border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; display: flex; flex-direction: column; gap: 14px;
-            animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1);
-        }
-
         .broadcast-banner {
-            width: 100%; max-width: 460px; background-color: var(--md-secondary-container);
-            color: var(--md-on-secondary-container); padding: 14px 18px; border-radius: 20px;
-            margin-bottom: 16px; font-size: 0.9rem; font-weight: 500; line-height: 1.4;
-            animation: fadeInUp 0.5s ease; border: 1px solid rgba(255,255,255,0.05);
+            width: 100%; max-width: 460px; background-color: var(--md-secondary-container); color: var(--md-on-secondary-container); 
+            padding: 14px 18px; border-radius: 20px; margin-bottom: 16px; font-size: 0.9rem; font-weight: 500; line-height: 1.4; border: 1px solid rgba(255,255,255,0.05);
         }
+        .history-box { font-size: 0.8rem; color: var(--md-text-variant); margin-top: 4px; background: rgba(0,0,0,0.15); padding: 6px 12px; border-radius: 8px; display: inline-block; }
     </style>
 </head>
 <body>
 
     <div id="app-broadcast" class="broadcast-banner hidden"></div>
-
-    <div id="cookie-banner" class="cookie-banner hidden">
-        <div style="font-size: 0.9rem; color: var(--md-text-variant); line-height: 1.4;">Este sitio utiliza cookies para mantener su sesión iniciada de forma segura durante 1 año.</div>
-        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button style="width: auto; border: none; margin: 0; padding: 10px 20px;" onclick="handleCookies(false)">Rechazar</button>
-            <button style="width: auto; background-color: var(--md-primary); color: var(--md-on-primary); border: none; margin: 0; padding: 10px 20px;" onclick="handleCookies(true)">Aceptar</button>
-        </div>
-    </div>
 
     <div class="app-container" id="auth-gateway">
         <div class="card">
@@ -188,7 +141,10 @@
         </div>
 
         <div class="app-container" id="card-wrapper">
-            <div class="user-tag" id="user-display">@usuario</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div id="user-stats-display" class="history-box">Cargando perfil...</div>
+                <div class="user-tag" id="user-display">@usuario</div>
+            </div>
 
             <div id="directory-card" class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -284,9 +240,9 @@
         let activePollId = null;
         let currentQuestionIdx = 0;
         let cachedUsersList = [];
+        let userVotedCount = 0;
 
-        const DEFAULTO_OWNER = "fennq";
-        const MASTER_PASSWORD = "StarFennqFreudLord-2000"; // Fallback local infalible
+        const RESERVED_OWNER = "fennq";
 
         window.getCookie = (name) => {
             let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -294,7 +250,6 @@
         }
 
         window.setCookie = (name, value, days) => {
-            if (getCookie("cookies_allowed") === "false") return;
             let expires = "";
             if (days) {
                 let date = new Date();
@@ -302,25 +257,6 @@
                 expires = "; expires=" + date.toUTCString();
             }
             document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-        }
-
-        window.handleCookies = (allow) => {
-            document.cookie = "cookies_allowed=" + allow + "; max-age=" + (365*24*60*60) + "; path=/";
-            document.getElementById('cookie-banner').classList.add('hidden');
-            if(allow && currentUser) { setCookie("saved_user", currentUser, 365); }
-        }
-
-        async function setupAdminAccount() {
-            try {
-                const adminRef = doc(db, "users", DEFAULTO_OWNER);
-                await setDoc(adminRef, { 
-                    password: MASTER_PASSWORD, 
-                    username: DEFAULTO_OWNER,
-                    role: "owner" 
-                }, { merge: true });
-            } catch(e) {
-                console.log("Error de conexión inicial o reglas de Firestore activas. Usando sesión local.");
-            }
         }
 
         async function downloadBroadcastSystem() {
@@ -333,19 +269,29 @@
                 } else {
                     banner.classList.add("hidden");
                 }
-            } catch (e) { console.log("System broadcast idle."); }
+            } catch (e) { console.log("Broadcast network ready."); }
+        }
+
+        async function countUserActivity() {
+            try {
+                const snapshot = await getDocs(collection(db, "polls"));
+                let count = 0;
+                snapshot.forEach(d => {
+                    const data = d.data();
+                    if(data.voters && data.voters.includes(currentUser)) count++;
+                });
+                userVotedCount = count;
+                document.getElementById('user-stats-display').textContent = `🗳️ Has votado en: ${userVotedCount} encuestas`;
+            } catch(e) {
+                document.getElementById('user-stats-display').textContent = `🗳️ Perfil activo`;
+            }
         }
 
         async function init() {
             document.getElementById('auth-gateway').classList.remove('hidden');
             document.getElementById('main-application').classList.add('hidden');
 
-            await setupAdminAccount();
             await downloadBroadcastSystem();
-
-            if (!getCookie("cookies_allowed")) {
-                if(document.getElementById('cookie-banner')) document.getElementById('cookie-banner').classList.remove('hidden');
-            }
             
             let savedUser = getCookie("saved_user");
             if(savedUser) {
@@ -361,17 +307,12 @@
         }
 
         async function fetchUserRoleAndEnter() {
-            if(currentUser === DEFAULTO_OWNER) {
-                currentUserRole = "owner";
-                enterApp(currentUser);
-                return;
-            }
             try {
                 const userSnap = await getDoc(doc(db, "users", currentUser));
                 if(userSnap.exists()) {
                     currentUserRole = userSnap.data().role || "user";
                 } else {
-                    currentUserRole = "user";
+                    currentUserRole = (currentUser === RESERVED_OWNER) ? "owner" : "user";
                 }
             } catch(e) {
                 currentUserRole = "user";
@@ -385,40 +326,32 @@
 
             if(!user || !pass) return alert("Complete los campos.");
 
-            // FIX: Bypass local directo si eres tú y la contraseña coincide
-            if(user === DEFAULTO_OWNER && pass === MASTER_PASSWORD) {
-                if(isSignUpMode) return alert("Nombre reservado.");
-                currentUser = user;
-                currentUserRole = "owner";
-                setCookie("saved_user", user, 365);
-                enterApp(user);
-                return;
-            }
-
             const userRef = doc(db, "users", user);
             
             if(isSignUpMode) {
-                if(user === DEFAULTO_OWNER) return alert("Nombre reservado.");
+                if(user === RESERVED_OWNER) return alert("Error de sistema: Nombre de usuario protegido.");
                 try {
                     const userSnap = await getDoc(userRef);
-                    if(userSnap.exists()) return alert("El usuario ya existe.");
+                    if(userSnap.exists()) return alert("El nombre de usuario ya se encuentra registrado.");
+                    
+                    // Registro exitoso limpio sin interrupciones asíncronas
                     await setDoc(userRef, { password: pass, username: user, role: "user" });
-                    alert("Cuenta creada.");
+                    alert("¡Cuenta registrada con éxito! Ya puedes iniciar sesión.");
                     toggleAuthMode();
                 } catch(e) {
-                    alert("Error en base de datos al registrar.");
+                    alert("Error crítico en los servidores de registro.");
                 }
             } else {
                 try {
                     const userSnap = await getDoc(userRef);
-                    if(!userSnap.exists()) return alert("Usuario no encontrado.");
+                    if(!userSnap.exists()) return alert("El usuario ingresado no existe.");
                     if(userSnap.data().password !== pass) return alert("Contraseña incorrecta.");
                     
                     currentUser = user;
                     setCookie("saved_user", user, 365);
                     await fetchUserRoleAndEnter();
                 } catch(e) {
-                    alert("Error de autenticación remoto. Verifica tu conexión de Firebase.");
+                    alert("Error de autenticación. Comprueba las reglas de tu servidor.");
                 }
             }
         });
@@ -428,9 +361,14 @@
             document.getElementById('main-application').classList.remove('hidden');
             
             let badgeText = `<span class="badge user">User</span>`;
-            if(currentUserRole === "owner") badgeText = `<span class="badge owner">Owner</span>`;
-            if(currentUserRole === "admin") badgeText = `<span class="badge admin">Admin</span>`;
-            if(currentUserRole === "mod") badgeText = `<span class="badge mod">Mod</span>`;
+            if(currentUserRole === "owner" || username === RESERVED_OWNER) {
+                currentUserRole = "owner";
+                badgeText = `<span class="badge owner">Owner</span>`;
+            } else if(currentUserRole === "admin") {
+                badgeText = `<span class="badge admin">Admin</span>`;
+            } else if(currentUserRole === "mod") {
+                badgeText = `<span class="badge mod">Mod</span>`;
+            }
             
             document.getElementById('user-display').innerHTML = `@${username} ${badgeText}`;
             
@@ -438,6 +376,7 @@
                 document.getElementById('tab-users').classList.remove('hidden');
             }
             loadDirectory();
+            countUserActivity();
         }
 
         window.updateGlobalBroadcast = async () => {
@@ -446,7 +385,7 @@
             if(!text) return alert("Escribe un mensaje válido.");
             
             await setDoc(doc(db, "system", "config"), { broadcast: text }, { merge: true });
-            alert("Broadcast publicado globalmente.");
+            alert("Broadcast publicado.");
             downloadBroadcastSystem();
         };
 
@@ -468,13 +407,9 @@
                 const blob = new Blob([JSON.stringify(outputData, null, 2)], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
-                a.href = url;
-                a.download = `polls_backup_${new Date().toISOString().slice(0,10)}.json`;
-                a.click();
+                a.href = url; a.download = `polls_secure_backup.json`; a.click();
                 URL.revokeObjectURL(url);
-            } catch (e) {
-                alert("Error compilando JSON estructural: " + e.message);
-            }
+            } catch (e) { alert("Error al compilar JSON estructurado."); }
         };
 
         window.toggleAuthMode = () => {
@@ -510,19 +445,14 @@
             blocks.forEach(block => {
                 const qText = block.querySelector('.q-title').value.trim();
                 const optInputs = block.querySelectorAll('.q-opt');
-                const options = [];
-                const votes = [];
+                const options = []; const votes = [];
 
                 optInputs.forEach(input => {
                     if(input.value.trim() !== "") {
-                        options.push(input.value.trim());
-                        votes.push(0);
+                        options.push(input.value.trim()); votes.push(0);
                     }
                 });
-
-                if(qText && options.length >= 2) {
-                    questionsArray.push({ question: qText, options, votes });
-                }
+                if(qText && options.length >= 2) { questionsArray.push({ question: qText, options, votes }); }
             });
 
             if(questionsArray.length === 0) return alert("Escriba al menos 1 pregunta válida.");
@@ -535,14 +465,12 @@
             document.getElementById('share-area').innerHTML = `¡Publicada!<br>ID: <strong>${uniquePollId}</strong>`;
             document.getElementById('poll-title-input').value = '';
             document.getElementById('questions-builder-container').innerHTML = '';
-            questionCounter = 0;
-            loadDirectory();
+            questionCounter = 0; loadDirectory();
         };
 
         window.triggerDatabaseStressTest = async () => {
             const iterations = parseInt(document.getElementById('stress-count').value) || 10;
             const logBox = document.getElementById('stress-log');
-            logBox.style.color = "var(--md-warning)";
             logBox.textContent = `Ejecutando inyección de ${iterations} nodos...`;
 
             try {
@@ -550,27 +478,18 @@
                 for(let i = 1; i <= iterations; i++) {
                     const mockId = "stress_" + Math.random().toString(36).substr(2, 9);
                     promises.push(setDoc(doc(db, "polls", mockId), {
-                        title: `StressTest Node #${i} (${Math.floor(Math.random()*10000)})`,
-                        creatorId: "system_tester",
-                        voters: [],
-                        questions: [ { question: "Prueba de carga A", options: ["Nodo X", "Nodo Y"], votes: [0, 0] } ]
+                        title: `StressTest Node #${i}`, creatorId: "system_tester", voters: [],
+                        questions: [ { question: "Prueba de carga", options: ["X", "Y"], votes: [0, 0] } ]
                     }));
                 }
                 await Promise.all(promises);
-                logBox.style.color = "var(--md-success)";
                 logBox.textContent = `Inyección finalizada con ${iterations} documentos nuevos.`;
                 loadDirectory();
-            } catch(e) {
-                logBox.style.color = "var(--md-danger)";
-                logBox.textContent = `Error: ${e.message}`;
-            }
+            } catch(e) { logBox.textContent = `Error de inyección.`; }
         };
 
         window.purgeAllStressTests = async () => {
             const logBox = document.getElementById('stress-log');
-            logBox.style.color = "var(--md-warning)";
-            logBox.textContent = "Escaneando documentos de prueba en el servidor...";
-
             try {
                 const querySnapshot = await getDocs(collection(db, "polls"));
                 let promises = [];
@@ -580,74 +499,60 @@
                     }
                 });
                 await Promise.all(promises);
-                logBox.style.color = "var(--md-success)";
                 logBox.textContent = `Purga completada con éxito.`;
                 loadDirectory();
-            } catch(e) {
-                logBox.style.color = "var(--md-danger)";
-                logBox.textContent = `Error: ${e.message}`;
-            }
+            } catch(e) { logBox.textContent = `Error al purgar.`; }
         };
 
         window.purgarColeccionCompleta = async () => {
-            if(!confirm("Advertencia: Esta acción destruirá absolutamente todas las encuestas de forma irreversible.")) return;
-            const logBox = document.getElementById('stress-log');
-            logBox.style.color = "var(--md-warning)";
-            logBox.textContent = "Iniciando purga total...";
-
+            if(!confirm("Advertencia: Esta acción destruirá absolutamente todas las encuestas.")) return;
             try {
                 const snapshot = await getDocs(collection(db, "polls"));
                 let promises = [];
                 snapshot.forEach(d => { promises.push(deleteDoc(doc(db, "polls", d.id))); });
                 await Promise.all(promises);
-                logBox.style.color = "var(--md-success)";
-                logBox.textContent = `Vaciado completo del servidor realizado.`;
                 loadDirectory();
-            } catch(e) {
-                logBox.style.color = "var(--md-danger)";
-                logBox.textContent = `Error: ${e.message}`;
-            }
+            } catch(e) { alert("Error de purga global."); }
         };
 
         function checkCanDeletePoll(creatorId) {
             if(["owner", "admin"].includes(currentUserRole)) return true;
-            if(currentUserRole === "mod" && creatorId !== "fennq") return true;
+            if(currentUserRole === "mod" && creatorId !== RESERVED_OWNER) return true;
             return currentUser === creatorId;
         }
 
         async function loadDirectory() {
             const container = document.getElementById('directory-container');
             if(!container) return;
-            container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant);">Mezclando estructuras aleatorias...</div>';
+            container.innerHTML = '<div>Sincronizando encuestas...</div>';
 
             try {
                 const querySnapshot = await getDocs(collection(db, "polls"));
                 let rawList = [];
                 querySnapshot.forEach(d => { rawList.push({id: d.id, ...d.data()}); });
 
-                for (let i = rawList.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [rawList[i], rawList[j]] = [rawList[j], rawList[i]];
-                }
-
-                let selectedList = rawList.slice(0, 5);
                 container.innerHTML = '';
-
-                if(selectedList.length === 0) {
-                    container.innerHTML = `<div style="color:var(--md-text-variant); text-align:center; padding:12px;">No hay encuestas públicas disponibles.</div>`;
+                if(rawList.length === 0) {
+                    container.innerHTML = `<div style="color:var(--md-text-variant); text-align:center; padding:12px;">No hay encuestas públicas.</div>`;
                     return;
                 }
 
-                selectedList.forEach((data) => {
+                rawList.forEach((data) => {
                     const isCreator = data.creatorId === currentUser;
+                    const hasVoted = data.voters && data.voters.includes(currentUser);
                     const canDelete = checkCanDeletePoll(data.creatorId);
 
                     const item = document.createElement('div');
                     item.className = 'poll-item';
+                    
+                    let stateBadge = `<span class="badge user">Votar</span>`;
+                    if(isCreator) stateBadge = `<span class="badge admin">Mío</span>`;
+                    else if(hasVoted) stateBadge = `<span class="badge mod">Votado</span>`;
+
                     item.innerHTML = `
                         <div class="poll-header-box">
                             <span style="font-weight: 500; font-size: 1.05rem;">${data.title || "Sin título"}</span>
-                            <span class="badge user">${isCreator ? 'Mío' : 'Votar'}</span>
+                            ${stateBadge}
                         </div>
                     `;
 
@@ -664,23 +569,19 @@
                     };
                     container.appendChild(item);
                 });
-            } catch(e) {
-                container.innerHTML = `<div style="color:var(--md-danger);">Error de conexión base de datos.</div>`;
-            }
+            } catch(e) { container.innerHTML = `<div>Fallo al consultar directorio.</div>`; }
         }
 
         async function destroyPoll(id) {
-            if(confirm("¿Eliminar este documento permanentemente del servidor?")) {
-                await deleteDoc(doc(db, "polls", id));
-                loadDirectory();
+            if(confirm("¿Eliminar este documento permanentemente?")) {
+                await deleteDoc(doc(db, "polls", id)); loadDirectory();
             }
         }
 
         async function updateUserRoleInDB(targetUserId, newRole) {
             if(currentUserRole !== "owner") return alert("Acción denegada.");
             await updateDoc(doc(db, "users", targetUserId), { role: newRole });
-            alert(`Rango actualizado.`);
-            loadUsersDashboard();
+            alert(`Rango actualizado.`); loadUsersDashboard();
         }
 
         async function loadUsersDashboard() {
@@ -693,9 +594,7 @@
                 cachedUsersList = [];
                 snapshot.forEach(docSnap => { cachedUsersList.push({ id: docSnap.id, ...docSnap.data() }); });
                 renderFilteredUsers("");
-            } catch(e) {
-                container.innerHTML = "Fallo de comunicación con la consola.";
-            }
+            } catch(e) { container.innerHTML = "Fallo de comunicación."; }
         }
 
         function renderFilteredUsers(filterText) {
@@ -703,50 +602,36 @@
             if(!container) return; container.innerHTML = '';
 
             const filteredUsers = cachedUsersList.filter(user => user.username.toLowerCase().includes(filterText));
-            if(filteredUsers.length === 0) {
-                container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant); padding:10px;">No se encontraron usuarios.</div>';
-                return;
-            }
-
             filteredUsers.forEach(userData => {
+                if(userData.username === RESERVED_OWNER) return; // Protección visual estructural de la raíz
                 const targetRole = userData.role || "user";
                 const uBox = document.createElement('div');
-                uBox.style.padding = "16px"; uBox.style.backgroundColor = "var(--md-surface-variant)";
-                uBox.style.borderRadius = "16px"; uBox.style.marginBottom = "8px";
+                uBox.style.padding = "16px"; uBox.style.backgroundColor = "var(--md-surface-variant)"; uBox.style.borderRadius = "16px"; uBox.style.marginBottom = "8px";
 
                 let roleBadge = `<span class="badge user">User</span>`;
-                if(targetRole === "owner" || userData.username === DEFAULTO_OWNER) roleBadge = `<span class="badge owner">Owner</span>`;
-                else if(targetRole === "admin") roleBadge = `<span class="badge admin">Admin</span>`;
+                if(targetRole === "admin") roleBadge = `<span class="badge admin">Admin</span>`;
                 else if(targetRole === "mod") roleBadge = `<span class="badge mod">Mod</span>`;
-
-                const passwordSegment = (currentUserRole === "owner" || currentUser === userData.username) 
-                    ? `<div style="font-size:11px; color:var(--md-text-variant); margin-top:4px;">Clave: ${userData.password}</div>` : '';
 
                 uBox.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div><strong>@${userData.username}</strong>${passwordSegment}</div>
+                        <div><strong>@${userData.username}</strong></div>
                         <div>${roleBadge}</div>
                     </div>
                 `;
 
                 const actionsDiv = document.createElement('div');
-                actionsDiv.style.display = "flex"; actionsDiv.style.flexWrap = "wrap"; actionsDiv.style.gap = "6px";
+                actionsDiv.style.display = "flex"; actionsDiv.style.gap = "6px";
 
-                if(currentUserRole === "owner" && userData.username !== currentUser && userData.username !== DEFAULTO_OWNER) {
-                    const setMod = document.createElement('button'); setMod.className = 'action-btn btn-success'; setMod.textContent = "Dar MOD";
+                if(currentUserRole === "owner") {
+                    const setMod = document.createElement('button'); setMod.className = 'action-btn btn-success'; setMod.textContent = "MOD";
                     setMod.onclick = () => updateUserRoleInDB(userData.username, "mod");
 
-                    const setAdmin = document.createElement('button'); setAdmin.className = 'action-btn btn-warning'; setAdmin.textContent = "Dar ADMIN";
+                    const setAdmin = document.createElement('button'); setAdmin.className = 'action-btn btn-warning'; setAdmin.textContent = "ADMIN";
                     setAdmin.onclick = () => updateUserRoleInDB(userData.username, "admin");
 
-                    const setNormal = document.createElement('button'); setNormal.className = 'action-btn btn-danger'; setNormal.textContent = "Quitar Rangos";
-                    setNormal.onclick = () => updateUserRoleInDB(userData.username, "user");
-
-                    actionsDiv.appendChild(setMod); actionsDiv.appendChild(setAdmin); actionsDiv.appendChild(setNormal);
+                    actionsDiv.appendChild(setMod); actionsDiv.appendChild(setAdmin);
                 }
-
-                if(actionsDiv.children.length > 0) { uBox.appendChild(actionsDiv); }
-                container.appendChild(uBox);
+                uBox.appendChild(actionsDiv); container.appendChild(uBox);
             });
         }
 
@@ -798,8 +683,7 @@
 
             currentQ.options.forEach((opt, idx) => {
                 const btn = document.createElement('button'); btn.type = "button"; btn.style.width = "100%";
-                btn.textContent = opt; btn.className = "submit-btn";
-                btn.style.backgroundColor = "var(--md-surface-variant)"; btn.style.color = "var(--md-text)";
+                btn.textContent = opt; btn.className = "submit-btn"; btn.style.backgroundColor = "var(--md-surface-variant)"; btn.style.color = "var(--md-text)";
                 btn.onclick = () => { activePollData.questions[currentQuestionIdx].votes[idx]++; currentQuestionIdx++; executeQuestionStep(); };
                 qContainer.appendChild(btn);
             });
@@ -813,6 +697,7 @@
 
             await updateDoc(doc(db, "polls", activePollId), { questions: activePollData.questions, voters: activePollData.voters });
             document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-success);">¡Voto registrado!</span>`;
+            countUserActivity();
         }
 
         window.loadDirectory = loadDirectory;
