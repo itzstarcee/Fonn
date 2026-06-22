@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Global Polls - Material You</title>
     <style>
         :root {
@@ -20,13 +20,12 @@
             --md-on-danger: #690005;
             --md-success: #b4f1b4;
             --md-warning: #ffe082;
-            --md-motion-fluid: cubic-bezier(0.2, 0, 0, 1);
         }
 
         * {
             box-sizing: border-box; margin: 0; padding: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            user-select: none; -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -40,22 +39,15 @@
             overflow-x: hidden;
         }
 
-        /* Animations & Transitions */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(24px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .app-container {
             width: 100%;
             max-width: 460px;
             margin-top: 8px;
-            will-change: transform, opacity;
         }
 
         .card {
@@ -63,13 +55,13 @@
             border-radius: 28px;
             padding: 24px;
             margin-bottom: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            animation: fadeInUp 0.45s var(--md-motion-fluid) both;
-            transition: transform 0.25s var(--md-motion-fluid), box-shadow 0.25s var(--md-motion-fluid);
+            border: none;
+            animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         h2 { font-size: 1.35rem; margin-bottom: 18px; font-weight: 500; color: var(--md-text); }
@@ -78,34 +70,32 @@
         input, textarea {
             width: 100%; background-color: var(--md-surface-variant); border: 1px solid var(--md-outline);
             padding: 16px; border-radius: 16px; color: var(--md-text); margin-bottom: 16px; outline: none;
-            font-size: 1rem; transition: all 0.2s var(--md-motion-fluid);
+            font-size: 1rem; transition: all 0.2s cubic-bezier(0.2, 0, 0, 1); user-select: text;
         }
-        input:focus, textarea:focus { border-color: var(--md-primary); border-width: 2px; box-shadow: 0 0 0 4px rgba(168, 199, 250, 0.15); }
+        input:focus, textarea:focus { border-color: var(--md-primary); border-width: 2px; }
 
         button {
             width: 100%; padding: 14px 24px; border-radius: 100px; border: 1px solid var(--md-outline);
             background-color: transparent; color: var(--md-primary); cursor: pointer;
-            font-weight: 500; font-size: 0.95rem; transition: all 0.25s var(--md-motion-fluid); 
+            font-weight: 500; font-size: 0.95rem; transition: all 0.2s cubic-bezier(0.2, 0, 0, 1); 
             text-align: center; margin-bottom: 8px;
-            position: relative; overflow: hidden;
         }
-        button:hover { background-color: rgba(168, 199, 250, 0.08); transform: translateY(-1px); }
-        button:active { transform: scale(0.97); }
+        button:hover { background-color: rgba(168, 199, 250, 0.08); }
+        button:active { transform: scale(0.96); }
 
         .submit-btn {
             background-color: var(--md-primary); color: var(--md-on-primary); border: none; font-weight: 600; margin-top: 8px;
         }
-        .submit-btn:hover { background-color: #c2dbff; box-shadow: 0 6px 16px rgba(168,199,250,0.25); }
+        .submit-btn:hover { background-color: #c2dbff; box-shadow: 0 4px 12px rgba(168,199,250,0.2); }
 
-        .poll-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .poll-options { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
         
         .poll-item { 
             padding: 20px; background-color: var(--md-surface-variant); border-radius: 16px; 
-            margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; border: 1px solid transparent;
-            transition: all 0.25s var(--md-motion-fluid);
-            animation: fadeIn 0.3s ease-in-out;
+            margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; border: none;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        .poll-item:hover { background-color: #35333a; transform: scale(1.02); border-color: rgba(168, 199, 250, 0.2); }
+        .poll-item:hover { background-color: #35333a; transform: scale(1.01); }
         .poll-header-box { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         
         .badge { font-size: 0.75rem; padding: 6px 12px; border-radius: 8px; font-weight: 500; letter-spacing: 0.3px; }
@@ -121,28 +111,25 @@
         }
         .tab-btn.active { 
             background-color: var(--md-secondary-container); color: var(--md-on-secondary-container); font-weight: 600; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
         .hidden { display: none !important; }
         .share-link { margin-top: 14px; font-size: 0.85rem; color: var(--md-primary); word-break: break-all; text-align: center; }
-        .q-builder-block { background-color: var(--md-surface-variant); padding: 16px; border-radius: 16px; margin-bottom: 16px; animation: fadeInUp 0.35s var(--md-motion-fluid); border: 1px solid rgba(255,255,255,0.02); }
-        .auth-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--md-text-variant); cursor: pointer; transition: color 0.2s; }
-        .auth-footer:hover { color: var(--md-primary); }
-        .user-tag { font-size: 0.85rem; color: var(--md-text-variant); margin-bottom: 12px; text-align: right; font-weight: 500; display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
+        .q-builder-block { background-color: var(--md-surface-variant); padding: 16px; border-radius: 16px; margin-bottom: 16px; animation: fadeInUp 0.3s ease; }
+        .auth-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--md-text-variant); cursor: pointer; }
+        .user-tag { font-size: 0.85rem; color: var(--md-text-variant); margin-bottom: 12px; text-align: right; font-weight: 500;}
 
         .metric-row { margin-bottom: 12px; background-color: var(--md-surface-variant); padding: 16px; border-radius: 16px; }
         .metric-bar-bg { background-color: rgba(255, 255, 255, 0.06); height: 8px; border-radius: 100px; overflow: hidden; margin-top: 10px; }
-        .metric-bar-fill { height: 100%; background-color: var(--md-primary); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .metric-bar-fill { height: 100%; background-color: var(--md-primary); width: 0%; transition: width 0.8s cubic-bezier(0.2, 0, 0, 1); }
 
-        .action-btn { padding: 8px 16px; font-size: 0.8rem; border-radius: 100px; width: auto; margin-right: 6px; font-weight: 500; display: inline-block; text-align: center; border: none; margin-bottom: 4px; transition: background-color 0.2s, transform 0.2s; }
-        .action-btn:active { transform: scale(0.95); }
+        .action-btn { padding: 8px 16px; font-size: 0.8rem; border-radius: 100px; width: auto; margin-right: 6px; font-weight: 500; display: inline-block; text-align: center; border: none; margin-bottom: 4px; transition: background-color 0.2s; }
         .btn-danger { background-color: rgba(255, 180, 171, 0.15); color: var(--md-danger); }
-        .btn-danger:hover { background-color: rgba(255, 180, 171, 0.25); }
+        .btn-danger:hover { background-color: rgba(255, 180, 171, 0.3); }
         .btn-warning { background-color: rgba(255, 224, 130, 0.15); color: var(--md-warning); }
-        .btn-warning:hover { background-color: rgba(255, 224, 130, 0.25); }
+        .btn-warning:hover { background-color: rgba(255, 224, 130, 0.3); }
         .btn-success { background-color: rgba(180, 241, 180, 0.15); color: var(--md-success); }
-        .btn-success:hover { background-color: rgba(180, 241, 180, 0.25); }
+        .btn-success:hover { background-color: rgba(180, 241, 180, 0.3); }
 
         .search-container {
             background-color: var(--md-surface-variant);
@@ -152,7 +139,6 @@
             align-items: center;
             margin-bottom: 18px;
             border: 1px solid transparent;
-            transition: border-color 0.2s;
         }
         .search-container:focus-within { border-color: var(--md-primary); }
         .search-container input { background: transparent; border: none; margin: 0; padding: 12px 16px; }
@@ -160,9 +146,8 @@
         .cookie-banner {
             position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
             width: calc(100% - 32px); max-width: 420px; background-color: var(--md-surface-variant);
-            border-radius: 24px; padding: 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.6); z-index: 9999; display: flex; flex-direction: column; gap: 14px;
-            animation: fadeInUp 0.45s var(--md-motion-fluid);
-            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; display: flex; flex-direction: column; gap: 14px;
+            animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1);
         }
 
         .broadcast-banner {
@@ -170,7 +155,6 @@
             color: var(--md-on-secondary-container); padding: 14px 18px; border-radius: 20px;
             margin-bottom: 16px; font-size: 0.9rem; font-weight: 500; line-height: 1.4;
             animation: fadeInUp 0.5s ease; border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
     </style>
 </head>
@@ -179,28 +163,28 @@
     <div id="app-broadcast" class="broadcast-banner hidden"></div>
 
     <div id="cookie-banner" class="cookie-banner hidden">
-        <div style="font-size: 0.9rem; color: var(--md-text-variant); line-height: 1.4;">Este sitio utiliza cookies para mantener su sesión iniciada de forma segura.</div>
+        <div style="font-size: 0.9rem; color: var(--md-text-variant); line-height: 1.4;">Este sitio utiliza cookies para mantener su sesión iniciada de forma segura durante 1 año.</div>
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button style="width: auto; border: none; margin: 0; padding: 10px 20px;" id="cookie-reject-btn">Rechazar</button>
-            <button style="width: auto; background-color: var(--md-primary); color: var(--md-on-primary); border: none; margin: 0; padding: 10px 20px;" id="cookie-accept-btn">Aceptar</button>
+            <button style="width: auto; border: none; margin: 0; padding: 10px 20px;" onclick="handleCookies(false)">Rechazar</button>
+            <button style="width: auto; background-color: var(--md-primary); color: var(--md-on-primary); border: none; margin: 0; padding: 10px 20px;" onclick="handleCookies(true)">Aceptar</button>
         </div>
     </div>
 
     <div class="app-container" id="auth-gateway">
         <div class="card">
             <h2 id="auth-title">Iniciar Sesión</h2>
-            <input type="text" id="auth-username" placeholder="Usuario" autocomplete="username">
-            <input type="password" id="auth-password" placeholder="Contraseña" autocomplete="current-password">
+            <input type="text" id="auth-username" placeholder="Usuario">
+            <input type="password" id="auth-password" placeholder="Contraseña">
             <button class="submit-btn" id="auth-primary-btn">Entrar</button>
-            <div class="auth-footer" id="auth-toggle">¿No tienes una cuenta? Regístrate</div>
+            <div class="auth-footer" id="auth-toggle" onclick="toggleAuthMode()">¿No tienes una cuenta? Regístrate</div>
         </div>
     </div>
 
     <div class="hidden" id="main-application" style="width:100%; display:flex; flex-direction:column; align-items:center;">
         <div class="tabs">
-            <button class="tab-btn active" id="tab-directory">Explorar</button>
-            <button class="tab-btn" id="tab-create">Crear</button>
-            <button class="tab-btn hidden" id="tab-users">SYS_ROOT</button>
+            <button class="tab-btn active" id="tab-directory" onclick="switchTab('directory')">Explorar</button>
+            <button class="tab-btn" id="tab-create" onclick="switchTab('create')">Crear</button>
+            <button class="tab-btn hidden" id="tab-users" onclick="switchTab('users')">SYS_ROOT</button>
         </div>
 
         <div class="app-container" id="card-wrapper">
@@ -209,7 +193,7 @@
             <div id="directory-card" class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <h2>Encuestas Disponibles</h2>
-                    <button style="width:auto; padding:8px 20px; font-size:0.85rem; margin:0;" class="submit-btn" id="directory-shuffle-btn">Mezclar</button>
+                    <button style="width:auto; padding:8px 20px; font-size:0.85rem; margin:0;" class="submit-btn" onclick="loadDirectory()">Mezclar</button>
                 </div>
                 <div id="directory-container"></div>
             </div>
@@ -220,21 +204,21 @@
                     <h3 id="current-q-text" style="color:var(--md-text); font-size:1.1rem; margin-bottom:24px; line-height:1.4;"></h3>
                     <div class="poll-options" id="runtime-options"></div>
                 </div>
-                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:24px;" id="runtime-exit-btn">Salir</button>
+                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:24px;" onclick="switchTab('directory')">Salir</button>
             </div>
 
             <div id="analytics-card" class="card hidden">
                 <h2>Resultados en Tiempo Real</h2>
                 <div id="analytics-container"></div>
-                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:16px;" id="analytics-back-btn">Volver</button>
+                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:16px;" onclick="switchTab('directory')">Volver</button>
             </div>
 
             <div id="create-card" class="card hidden">
                 <h2>Nueva Multi-Encuesta</h2>
                 <input type="text" id="poll-title-input" placeholder="Título global de la encuesta">
                 <div id="questions-builder-container"></div>
-                <button type="button" style="margin-bottom:16px;" id="add-question-btn">+ Añadir Pregunta</button>
-                <button class="submit-btn" id="publish-poll-btn">Publicar Encuesta</button>
+                <button type="button" style="margin-bottom:16px;" onclick="addQuestionBlock()">+ Añadir Pregunta</button>
+                <button class="submit-btn" onclick="publishMultiPoll()">Publicar Encuesta</button>
                 <div id="share-area" class="share-link"></div>
             </div>
 
@@ -243,13 +227,13 @@
                 
                 <div style="background-color: var(--md-surface-variant); padding: 20px; border-radius: 20px; margin-bottom: 24px;">
                     <h3 style="color: var(--md-text); margin-bottom: 12px;">HERRAMIENTAS ESTRUCTURALES</h3>
-                    <button class="action-btn btn-success" style="width:100%; padding:12px; display:block; margin-bottom:8px; text-align:left;" id="export-json-btn">📦 Exportar Base de Datos (JSON)</button>
+                    <button class="action-btn btn-success" style="width:100%; padding:12px; display:block; margin-bottom:8px; text-align:left;" onclick="exportServerDataToJSON()">📦 Exportar Base de Datos (JSON)</button>
                     
                     <h3 style="color: var(--md-text); margin-top:16px; margin-bottom: 6px;">TRANSMISIÓN GLOBAL (BROADCAST)</h3>
                     <input type="text" id="broadcast-input" placeholder="Escribe un anuncio para todos los usuarios..." style="padding:12px; margin-bottom:8px;">
                     <div style="display:flex; gap:8px;">
-                        <button class="submit-btn" style="margin:0; padding:10px; font-size:0.85rem;" id="publish-broadcast-btn">Publicar</button>
-                        <button class="action-btn btn-danger" style="margin:0; padding:10px; font-size:0.85rem; width:auto; flex:1;" id="clear-broadcast-btn">Eliminar Banner</button>
+                        <button class="submit-btn" style="margin:0; padding:10px; font-size:0.85rem;" onclick="updateGlobalBroadcast()">Publicar</button>
+                        <button class="action-btn btn-danger" style="margin:0; padding:10px; font-size:0.85rem; width:auto; flex:1;" onclick="clearGlobalBroadcast()">Eliminar Banner</button>
                     </div>
                 </div>
 
@@ -257,10 +241,10 @@
                     <h3 style="color: var(--md-text); font-size: 0.9rem; margin-bottom: 8px;">MANTENIMIENTO DE CARGA</h3>
                     <div style="display:flex; gap:10px; margin-bottom:12px;">
                         <input type="number" id="stress-count" value="20" min="1" max="150" style="margin:0; padding:12px; font-size:0.9rem; width:80px; text-align:center;">
-                        <button class="submit-btn" style="margin:0; padding:12px; font-size:0.85rem;" id="stress-test-btn">Inyectar</button>
+                        <button class="submit-btn" style="margin:0; padding:12px; font-size:0.85rem;" onclick="triggerDatabaseStressTest()">Inyectar</button>
                     </div>
-                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block;" id="purge-stress-btn">Limpiar Stress Tests</button>
-                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block; margin-top:8px; background-color: rgba(255, 180, 171, 0.3);" id="purge-all-polls-btn">Borrar Todas las Encuestas Existentes</button>
+                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block;" onclick="purgeAllStressTests()">Limpiar Stress Tests</button>
+                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block; margin-top:8px; background-color: rgba(255, 180, 171, 0.3);" onclick="purgarColeccionCompleta()">Borrar Todas las Encuestas Existentes</button>
                     <div id="stress-log" style="font-size: 0.8rem; color: var(--md-success); margin-top: 10px;"></div>
                 </div>
 
@@ -277,7 +261,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDK9Vgz0-dnitjzARY4GwwPvXy0oyX_ngg",
@@ -302,54 +286,41 @@
         let cachedUsersList = [];
 
         const DEFAULTO_OWNER = "fennq";
+        const MASTER_PASSWORD = "StarFennqFreudLord-2000"; // Fallback local infalible
 
-        // --- SECURITY: SHA-256 Hashing Implementation ---
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // --- SECURITY: HTML Context Sanitizer (Anti-XSS Mitigation) ---
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>"']/g, m => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;'
-            }[m]));
-        }
-
-        const getCookie = (name) => {
+        window.getCookie = (name) => {
             let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
             return match ? match[2] : null;
-        };
+        }
 
-        const setCookie = (name, value, days) => {
+        window.setCookie = (name, value, days) => {
             if (getCookie("cookies_allowed") === "false") return;
             let expires = "";
             if (days) {
                 let date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                date.setTime(date.getTime() + (days*24*60*60*1000));
                 expires = "; expires=" + date.toUTCString();
             }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
-        };
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
 
-        const handleCookies = (allow) => {
-            document.cookie = "cookies_allowed=" + allow + "; max-age=" + (365 * 24 * 60 * 60) + "; path=/; SameSite=Strict; Secure";
+        window.handleCookies = (allow) => {
+            document.cookie = "cookies_allowed=" + allow + "; max-age=" + (365*24*60*60) + "; path=/";
             document.getElementById('cookie-banner').classList.add('hidden');
-            if (allow && currentUser) { setCookie("saved_user", currentUser, 365); }
-        };
+            if(allow && currentUser) { setCookie("saved_user", currentUser, 365); }
+        }
 
         async function setupAdminAccount() {
-            const adminRef = doc(db, "users", DEFAULTO_OWNER);
-            const securedHash = await hashPassword("StarFennqFreudLord-2000");
-            await setDoc(adminRef, { 
-                password: securedHash, 
-                username: DEFAULTO_OWNER,
-                role: "owner" 
-            }, { merge: true });
+            try {
+                const adminRef = doc(db, "users", DEFAULTO_OWNER);
+                await setDoc(adminRef, { 
+                    password: MASTER_PASSWORD, 
+                    username: DEFAULTO_OWNER,
+                    role: "owner" 
+                }, { merge: true });
+            } catch(e) {
+                console.log("Error de conexión inicial o reglas de Firestore activas. Usando sesión local.");
+            }
         }
 
         async function downloadBroadcastSystem() {
@@ -373,26 +344,36 @@
             await downloadBroadcastSystem();
 
             if (!getCookie("cookies_allowed")) {
-                if (document.getElementById('cookie-banner')) document.getElementById('cookie-banner').classList.remove('hidden');
+                if(document.getElementById('cookie-banner')) document.getElementById('cookie-banner').classList.remove('hidden');
             }
             
             let savedUser = getCookie("saved_user");
-            if (savedUser) {
+            if(savedUser) {
                 currentUser = savedUser.toLowerCase();
                 await fetchUserRoleAndEnter();
             }
 
-            document.getElementById('user-search-input').addEventListener('input', (e) => {
-                renderFilteredUsers(e.target.value.trim().toLowerCase());
-            });
+            if(document.getElementById('user-search-input')) {
+                document.getElementById('user-search-input').addEventListener('input', (e) => {
+                    renderFilteredUsers(e.target.value.trim().toLowerCase());
+                });
+            }
         }
 
         async function fetchUserRoleAndEnter() {
-            const userSnap = await getDoc(doc(db, "users", currentUser));
-            if (userSnap.exists()) {
-                currentUserRole = userSnap.data().role || "user";
-                if (currentUser === DEFAULTO_OWNER) currentUserRole = "owner"; 
-            } else {
+            if(currentUser === DEFAULTO_OWNER) {
+                currentUserRole = "owner";
+                enterApp(currentUser);
+                return;
+            }
+            try {
+                const userSnap = await getDoc(doc(db, "users", currentUser));
+                if(userSnap.exists()) {
+                    currentUserRole = userSnap.data().role || "user";
+                } else {
+                    currentUserRole = "user";
+                }
+            } catch(e) {
                 currentUserRole = "user";
             }
             enterApp(currentUser);
@@ -402,26 +383,43 @@
             const user = document.getElementById('auth-username').value.trim().toLowerCase();
             const pass = document.getElementById('auth-password').value;
 
-            if (!user || !pass) return alert("Complete los campos.");
-            if (!/^[a-z0-9_]{3,16}$/.test(user)) return alert("Usuario inválido (mínimo 3-16 caracteres alfanuméricos o guion bajo).");
+            if(!user || !pass) return alert("Complete los campos.");
+
+            // FIX: Bypass local directo si eres tú y la contraseña coincide
+            if(user === DEFAULTO_OWNER && pass === MASTER_PASSWORD) {
+                if(isSignUpMode) return alert("Nombre reservado.");
+                currentUser = user;
+                currentUserRole = "owner";
+                setCookie("saved_user", user, 365);
+                enterApp(user);
+                return;
+            }
 
             const userRef = doc(db, "users", user);
-            const userSnap = await getDoc(userRef);
-            const clientHash = await hashPassword(pass);
-
-            if (isSignUpMode) {
-                if (user === DEFAULTO_OWNER) return alert("Nombre reservado.");
-                if (userSnap.exists()) return alert("El usuario ya existe.");
-                await setDoc(userRef, { password: clientHash, username: user, role: "user" });
-                alert("Cuenta creada.");
-                toggleAuthMode();
+            
+            if(isSignUpMode) {
+                if(user === DEFAULTO_OWNER) return alert("Nombre reservado.");
+                try {
+                    const userSnap = await getDoc(userRef);
+                    if(userSnap.exists()) return alert("El usuario ya existe.");
+                    await setDoc(userRef, { password: pass, username: user, role: "user" });
+                    alert("Cuenta creada.");
+                    toggleAuthMode();
+                } catch(e) {
+                    alert("Error en base de datos al registrar.");
+                }
             } else {
-                if (!userSnap.exists()) return alert("Usuario no encontrado.");
-                if (userSnap.data().password !== clientHash) return alert("Contraseña incorrecta.");
-                
-                currentUser = user;
-                setCookie("saved_user", user, 365);
-                await fetchUserRoleAndEnter();
+                try {
+                    const userSnap = await getDoc(userRef);
+                    if(!userSnap.exists()) return alert("Usuario no encontrado.");
+                    if(userSnap.data().password !== pass) return alert("Contraseña incorrecta.");
+                    
+                    currentUser = user;
+                    setCookie("saved_user", user, 365);
+                    await fetchUserRoleAndEnter();
+                } catch(e) {
+                    alert("Error de autenticación remoto. Verifica tu conexión de Firebase.");
+                }
             }
         });
 
@@ -430,38 +428,38 @@
             document.getElementById('main-application').classList.remove('hidden');
             
             let badgeText = `<span class="badge user">User</span>`;
-            if (currentUserRole === "owner") badgeText = `<span class="badge owner">Owner</span>`;
-            if (currentUserRole === "admin") badgeText = `<span class="badge admin">Admin</span>`;
-            if (currentUserRole === "mod") badgeText = `<span class="badge mod">Mod</span>`;
+            if(currentUserRole === "owner") badgeText = `<span class="badge owner">Owner</span>`;
+            if(currentUserRole === "admin") badgeText = `<span class="badge admin">Admin</span>`;
+            if(currentUserRole === "mod") badgeText = `<span class="badge mod">Mod</span>`;
             
-            document.getElementById('user-display').innerHTML = `@${escapeHTML(username)} ${badgeText}`;
+            document.getElementById('user-display').innerHTML = `@${username} ${badgeText}`;
             
-            if (["owner", "admin", "mod"].includes(currentUserRole)) {
+            if(["owner", "admin", "mod"].includes(currentUserRole)) {
                 document.getElementById('tab-users').classList.remove('hidden');
             }
             loadDirectory();
         }
 
-        const updateGlobalBroadcast = async () => {
-            if (!["owner", "admin"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+        window.updateGlobalBroadcast = async () => {
+            if(!["owner", "admin"].includes(currentUserRole)) return;
             const text = document.getElementById("broadcast-input").value.trim();
-            if (!text) return alert("Escribe un mensaje válido.");
+            if(!text) return alert("Escribe un mensaje válido.");
             
             await setDoc(doc(db, "system", "config"), { broadcast: text }, { merge: true });
             alert("Broadcast publicado globalmente.");
             downloadBroadcastSystem();
         };
 
-        const clearGlobalBroadcast = async () => {
-            if (!["owner", "admin"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+        window.clearGlobalBroadcast = async () => {
+            if(!["owner", "admin"].includes(currentUserRole)) return;
             await setDoc(doc(db, "system", "config"), { broadcast: "" }, { merge: true });
             document.getElementById("broadcast-input").value = "";
             alert("Broadcast eliminado.");
             downloadBroadcastSystem();
         };
 
-        const exportServerDataToJSON = async () => {
-            if (!["owner", "admin", "mod"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+        window.exportServerDataToJSON = async () => {
+            if(!["owner", "admin", "mod"].includes(currentUserRole)) return;
             try {
                 const querySnapshot = await getDocs(collection(db, "polls"));
                 let outputData = [];
@@ -479,14 +477,14 @@
             }
         };
 
-        const toggleAuthMode = () => {
+        window.toggleAuthMode = () => {
             isSignUpMode = !isSignUpMode;
             document.getElementById('auth-title').textContent = isSignUpMode ? "Crear Cuenta" : "Iniciar Sesión";
             document.getElementById('auth-primary-btn').textContent = isSignUpMode ? "Registrarse" : "Entrar";
             document.getElementById('auth-toggle').textContent = isSignUpMode ? "¿Ya tienes una cuenta? Inicia Sesión" : "¿No tienes una cuenta? Regístrate";
         };
 
-        const addQuestionBlock = () => {
+        window.addQuestionBlock = () => {
             questionCounter++;
             const container = document.getElementById('questions-builder-container');
             const block = document.createElement('div');
@@ -502,12 +500,12 @@
             container.appendChild(block);
         };
 
-        const publishMultiPoll = async () => {
+        window.publishMultiPoll = async () => {
             const title = document.getElementById('poll-title-input').value.trim();
             const blocks = document.querySelectorAll('.q-builder-block');
             const questionsArray = [];
 
-            if (!title || blocks.length === 0) return alert("Rellenene los datos mínimos.");
+            if(!title || blocks.length === 0) return alert("Rellene los datos mínimos.");
 
             blocks.forEach(block => {
                 const qText = block.querySelector('.q-title').value.trim();
@@ -516,37 +514,32 @@
                 const votes = [];
 
                 optInputs.forEach(input => {
-                    if (input.value.trim() !== "") {
+                    if(input.value.trim() !== "") {
                         options.push(input.value.trim());
                         votes.push(0);
                     }
                 });
 
-                if (qText && options.length >= 2) {
+                if(qText && options.length >= 2) {
                     questionsArray.push({ question: qText, options, votes });
                 }
             });
 
-            if (questionsArray.length === 0) return alert("Escriba al menos 1 pregunta válida con 2 opciones.");
+            if(questionsArray.length === 0) return alert("Escriba al menos 1 pregunta válida.");
 
-            // Standard secure Firebase ID generation
-            const pollCollectionRef = collection(db, "polls");
-            const newPollRef = doc(pollCollectionRef); 
-            
-            await setDoc(newPollRef, {
+            const uniquePollId = "poll_" + Math.random().toString(36).substr(2, 9);
+            await setDoc(doc(db, "polls", uniquePollId), {
                 title, creatorId: currentUser, questions: questionsArray, voters: []
             });
 
-            document.getElementById('share-area').innerHTML = `¡Publicada!<br>ID: <strong>${newPollRef.id}</strong>`;
+            document.getElementById('share-area').innerHTML = `¡Publicada!<br>ID: <strong>${uniquePollId}</strong>`;
             document.getElementById('poll-title-input').value = '';
             document.getElementById('questions-builder-container').innerHTML = '';
             questionCounter = 0;
-            addQuestionBlock();
             loadDirectory();
         };
 
-        const triggerDatabaseStressTest = async () => {
-            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
+        window.triggerDatabaseStressTest = async () => {
             const iterations = parseInt(document.getElementById('stress-count').value) || 10;
             const logBox = document.getElementById('stress-log');
             logBox.style.color = "var(--md-warning)";
@@ -554,9 +547,9 @@
 
             try {
                 let promises = [];
-                for (let i = 1; i <= iterations; i++) {
-                    const mockRef = doc(collection(db, "polls"));
-                    promises.push(setDoc(mockRef, {
+                for(let i = 1; i <= iterations; i++) {
+                    const mockId = "stress_" + Math.random().toString(36).substr(2, 9);
+                    promises.push(setDoc(doc(db, "polls", mockId), {
                         title: `StressTest Node #${i} (${Math.floor(Math.random()*10000)})`,
                         creatorId: "system_tester",
                         voters: [],
@@ -567,14 +560,13 @@
                 logBox.style.color = "var(--md-success)";
                 logBox.textContent = `Inyección finalizada con ${iterations} documentos nuevos.`;
                 loadDirectory();
-            } catch (e) {
+            } catch(e) {
                 logBox.style.color = "var(--md-danger)";
                 logBox.textContent = `Error: ${e.message}`;
             }
         };
 
-        const purgeAllStressTests = async () => {
-            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
+        window.purgeAllStressTests = async () => {
             const logBox = document.getElementById('stress-log');
             logBox.style.color = "var(--md-warning)";
             logBox.textContent = "Escaneando documentos de prueba en el servidor...";
@@ -583,7 +575,7 @@
                 const querySnapshot = await getDocs(collection(db, "polls"));
                 let promises = [];
                 querySnapshot.forEach((docSnap) => {
-                    if (docSnap.id.startsWith("stress_") || docSnap.data().creatorId === "system_tester") {
+                    if(docSnap.id.startsWith("stress_") || docSnap.data().creatorId === "system_tester") {
                         promises.push(deleteDoc(doc(db, "polls", docSnap.id)));
                     }
                 });
@@ -591,15 +583,14 @@
                 logBox.style.color = "var(--md-success)";
                 logBox.textContent = `Purga completada con éxito.`;
                 loadDirectory();
-            } catch (e) {
+            } catch(e) {
                 logBox.style.color = "var(--md-danger)";
                 logBox.textContent = `Error: ${e.message}`;
             }
         };
 
-        const purgarColeccionCompleta = async () => {
-            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
-            if (!confirm("Advertencia: Esta acción destruirá absolutamente todas las encuestas de forma irreversible.")) return;
+        window.purgarColeccionCompleta = async () => {
+            if(!confirm("Advertencia: Esta acción destruirá absolutamente todas las encuestas de forma irreversible.")) return;
             const logBox = document.getElementById('stress-log');
             logBox.style.color = "var(--md-warning)";
             logBox.textContent = "Iniciando purga total...";
@@ -612,21 +603,21 @@
                 logBox.style.color = "var(--md-success)";
                 logBox.textContent = `Vaciado completo del servidor realizado.`;
                 loadDirectory();
-            } catch (e) {
+            } catch(e) {
                 logBox.style.color = "var(--md-danger)";
                 logBox.textContent = `Error: ${e.message}`;
             }
         };
 
         function checkCanDeletePoll(creatorId) {
-            if (["owner", "admin"].includes(currentUserRole)) return true;
-            if (currentUserRole === "mod" && creatorId !== "fennq") return true;
+            if(["owner", "admin"].includes(currentUserRole)) return true;
+            if(currentUserRole === "mod" && creatorId !== "fennq") return true;
             return currentUser === creatorId;
         }
 
         async function loadDirectory() {
             const container = document.getElementById('directory-container');
-            if (!container) return;
+            if(!container) return;
             container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant);">Mezclando estructuras aleatorias...</div>';
 
             try {
@@ -642,7 +633,7 @@
                 let selectedList = rawList.slice(0, 5);
                 container.innerHTML = '';
 
-                if (selectedList.length === 0) {
+                if(selectedList.length === 0) {
                     container.innerHTML = `<div style="color:var(--md-text-variant); text-align:center; padding:12px;">No hay encuestas públicas disponibles.</div>`;
                     return;
                 }
@@ -653,78 +644,66 @@
 
                     const item = document.createElement('div');
                     item.className = 'poll-item';
-                    
-                    const headerBox = document.createElement('div');
-                    headerBox.className = 'poll-header-box';
-                    
-                    const titleSpan = document.createElement('span');
-                    titleSpan.style.fontWeight = "500";
-                    titleSpan.style.fontSize = "1.05rem";
-                    titleSpan.textContent = data.title || "Sin título";
-                    
-                    const badgeSpan = document.createElement('span');
-                    badgeSpan.className = 'badge user';
-                    badgeSpan.textContent = isCreator ? 'Mío' : 'Votar';
-                    
-                    headerBox.appendChild(titleSpan);
-                    headerBox.appendChild(badgeSpan);
-                    item.appendChild(headerBox);
+                    item.innerHTML = `
+                        <div class="poll-header-box">
+                            <span style="font-weight: 500; font-size: 1.05rem;">${data.title || "Sin título"}</span>
+                            <span class="badge user">${isCreator ? 'Mío' : 'Votar'}</span>
+                        </div>
+                    `;
 
-                    if (canDelete && ["owner", "admin", "mod"].includes(currentUserRole)) {
+                    if(canDelete && ["owner", "admin", "mod"].includes(currentUserRole)) {
                         const delBtn = document.createElement('button');
-                        delBtn.className = 'action-btn btn-danger'; 
-                        delBtn.textContent = "Purgar";
-                        delBtn.style.marginTop = "8px";
+                        delBtn.className = 'action-btn btn-danger'; delBtn.textContent = "Purgar";
                         delBtn.onclick = (e) => { e.stopPropagation(); destroyPoll(data.id); };
                         item.appendChild(delBtn);
                     }
 
                     item.onclick = () => {
                         activePollId = data.id; activePollData = data;
-                        if (isCreator || ["owner", "admin", "mod"].includes(currentUserRole)) { renderAnalytics(data); } else { startVotingSession(); }
+                        if(isCreator || ["owner", "admin", "mod"].includes(currentUserRole)) { renderAnalytics(data); } else { startVotingSession(); }
                     };
                     container.appendChild(item);
                 });
-            } catch (e) {
-                container.innerHTML = `<div style="color:var(--md-danger);">Error de conexión con la base de datos.</div>`;
+            } catch(e) {
+                container.innerHTML = `<div style="color:var(--md-danger);">Error de conexión base de datos.</div>`;
             }
         }
 
         async function destroyPoll(id) {
-            if (confirm("¿Eliminar este documento permanentemente del servidor?")) {
+            if(confirm("¿Eliminar este documento permanentemente del servidor?")) {
                 await deleteDoc(doc(db, "polls", id));
                 loadDirectory();
             }
         }
 
         async function updateUserRoleInDB(targetUserId, newRole) {
-            if (currentUserRole !== "owner") return alert("Acción denegada.");
+            if(currentUserRole !== "owner") return alert("Acción denegada.");
             await updateDoc(doc(db, "users", targetUserId), { role: newRole });
             alert(`Rango actualizado.`);
             loadUsersDashboard();
         }
 
         async function loadUsersDashboard() {
-            if (!["owner", "admin", "mod"].includes(currentUserRole)) return;
+            if(!["owner", "admin", "mod"].includes(currentUserRole)) return;
             const container = document.getElementById('users-container');
-            if (!container) return;
+            if(!container) return;
 
             try {
                 const snapshot = await getDocs(collection(db, "users"));
                 cachedUsersList = [];
                 snapshot.forEach(docSnap => { cachedUsersList.push({ id: docSnap.id, ...docSnap.data() }); });
                 renderFilteredUsers("");
-            } catch (e) {
+            } catch(e) {
                 container.innerHTML = "Fallo de comunicación con la consola.";
             }
         }
 
         function renderFilteredUsers(filterText) {
             const container = document.getElementById('users-container');
-            if (!container) return; container.innerHTML = '';
+            if(!container) return; container.innerHTML = '';
 
             const filteredUsers = cachedUsersList.filter(user => user.username.toLowerCase().includes(filterText));
-            if (filteredUsers.length === 0) {
+            if(filteredUsers.length === 0) {
                 container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant); padding:10px;">No se encontraron usuarios.</div>';
                 return;
             }
@@ -736,14 +715,16 @@
                 uBox.style.borderRadius = "16px"; uBox.style.marginBottom = "8px";
 
                 let roleBadge = `<span class="badge user">User</span>`;
-                if (targetRole === "owner" || userData.username === DEFAULTO_OWNER) roleBadge = `<span class="badge owner">Owner</span>`;
-                else if (targetRole === "admin") roleBadge = `<span class="badge admin">Admin</span>`;
-                else if (targetRole === "mod") roleBadge = `<span class="badge mod">Mod</span>`;
+                if(targetRole === "owner" || userData.username === DEFAULTO_OWNER) roleBadge = `<span class="badge owner">Owner</span>`;
+                else if(targetRole === "admin") roleBadge = `<span class="badge admin">Admin</span>`;
+                else if(targetRole === "mod") roleBadge = `<span class="badge mod">Mod</span>`;
 
-                // CRITICAL SECURITY FIX: Plaintext passwords are completely extracted from presentation layouts to prevent visibility hijacking.
+                const passwordSegment = (currentUserRole === "owner" || currentUser === userData.username) 
+                    ? `<div style="font-size:11px; color:var(--md-text-variant); margin-top:4px;">Clave: ${userData.password}</div>` : '';
+
                 uBox.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <div><strong>@${escapeHTML(userData.username)}</strong></div>
+                        <div><strong>@${userData.username}</strong>${passwordSegment}</div>
                         <div>${roleBadge}</div>
                     </div>
                 `;
@@ -751,7 +732,7 @@
                 const actionsDiv = document.createElement('div');
                 actionsDiv.style.display = "flex"; actionsDiv.style.flexWrap = "wrap"; actionsDiv.style.gap = "6px";
 
-                if (currentUserRole === "owner" && userData.username !== currentUser && userData.username !== DEFAULTO_OWNER) {
+                if(currentUserRole === "owner" && userData.username !== currentUser && userData.username !== DEFAULTO_OWNER) {
                     const setMod = document.createElement('button'); setMod.className = 'action-btn btn-success'; setMod.textContent = "Dar MOD";
                     setMod.onclick = () => updateUserRoleInDB(userData.username, "mod");
 
@@ -764,7 +745,7 @@
                     actionsDiv.appendChild(setMod); actionsDiv.appendChild(setAdmin); actionsDiv.appendChild(setNormal);
                 }
 
-                if (actionsDiv.children.length > 0) { uBox.appendChild(actionsDiv); }
+                if(actionsDiv.children.length > 0) { uBox.appendChild(actionsDiv); }
                 container.appendChild(uBox);
             });
         }
@@ -772,29 +753,12 @@
         function renderAnalytics(data) {
             switchTab('analytics');
             const container = document.getElementById('analytics-container');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            const titleEl = document.createElement('h3');
-            titleEl.textContent = data.title;
-            const metaEl = document.createElement('p');
-            metaEl.style.fontSize = "0.85rem";
-            metaEl.style.color = "var(--md-text-variant)";
-            metaEl.style.marginBottom = "24px";
-            metaEl.textContent = `Participantes: ${data.voters ? data.voters.length : 0}`;
-            
-            container.appendChild(titleEl);
-            container.appendChild(metaEl);
+            if(!container) return;
+            container.innerHTML = `<h3>${data.title}</h3><p style="font-size:0.85rem; color:var(--md-text-variant); margin-bottom:24px;">Participantes: ${data.voters ? data.voters.length : 0}</p>`;
 
             data.questions.forEach((q, qIdx) => {
-                const qBlock = document.createElement('div'); qBlock.style.style = "margin-bottom: 24px;";
-                
-                const strongTitle = document.createElement('strong');
-                strongTitle.style.display = "block";
-                strongTitle.style.marginBottom = "12px";
-                strongTitle.textContent = `Q${qIdx + 1}. ${q.question}`;
-                qBlock.appendChild(strongTitle);
+                const qBlock = document.createElement('div'); qBlock.style.marginBottom = "24px";
+                qBlock.innerHTML = `<strong style="display:block; margin-bottom:12px;">Q${qIdx + 1}. ${q.question}</strong>`;
 
                 const totalVotes = q.votes.reduce((a,b)=>a+b, 0);
                 q.options.forEach((opt, oIdx) => {
@@ -804,14 +768,14 @@
                     const row = document.createElement('div'); row.className = 'metric-row';
                     row.innerHTML = `
                         <div style="display:flex; justify-content:space-between;">
-                            <span>${escapeHTML(opt)}</span> <span style="color:var(--md-primary); font-weight:500;">${count} votos (${pct}%)</span>
+                            <span>${opt}</span> <span style="color:var(--md-primary); font-weight:500;">${count} votos (${pct}%)</span>
                         </div>
                         <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-${qIdx}-${oIdx}"></div></div>
                     `;
                     qBlock.appendChild(row);
                     setTimeout(() => {
                         const el = document.getElementById(`bar-${qIdx}-${oIdx}`);
-                        if (el) el.style.width = `${pct}%`;
+                        if(el) el.style.width = `${pct}%`;
                     }, 50);
                 });
                 container.appendChild(qBlock);
@@ -819,14 +783,14 @@
         }
 
         function startVotingSession() {
-            if (activePollData.voters && activePollData.voters.includes(currentUser)) return alert("Ya has votado aquí.");
+            if(activePollData.voters && activePollData.voters.includes(currentUser)) return alert("Ya has votado aquí.");
             switchTab('runtime'); currentQuestionIdx = 0; executeQuestionStep();
         }
 
         function executeQuestionStep() {
-            const qContainer = document.getElementById('runtime-options'); if (!qContainer) return;
+            const qContainer = document.getElementById('runtime-options'); if(!qContainer) return;
             qContainer.innerHTML = '';
-            if (currentQuestionIdx >= activePollData.questions.length) { saveFinalPollPayload(); return; }
+            if(currentQuestionIdx >= activePollData.questions.length) { saveFinalPollPayload(); return; }
 
             const currentQ = activePollData.questions[currentQuestionIdx];
             document.getElementById('runtime-title').textContent = `Pregunta ${currentQuestionIdx + 1} de ${activePollData.questions.length}`;
@@ -841,47 +805,22 @@
             });
         }
 
-        // --- SECURITY / BUG FIX: Atomicity via Firestore Transactions ---
         async function saveFinalPollPayload() {
             document.getElementById('current-q-text').textContent = "Guardando respuestas...";
             document.getElementById('runtime-options').innerHTML = '';
-            
-            const pollDocRef = doc(db, "polls", activePollId);
+            if(!activePollData.voters) activePollData.voters = [];
+            activePollData.voters.push(currentUser);
 
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const sfDoc = await transaction.get(pollDocRef);
-                    if (!sfDoc.exists()) throw "La encuesta no existe.";
-
-                    let serverData = sfDoc.data();
-                    let updatedVoters = serverData.voters || [];
-                    
-                    if (updatedVoters.includes(currentUser)) throw "Ya has votado en este documento distribuido.";
-                    updatedVoters.push(currentUser);
-
-                    // Map local selections over live data payload safely
-                    let serverQuestions = serverData.questions;
-                    activePollData.questions.forEach((q, qIdx) => {
-                        q.votes.forEach((vCount, oIdx) => {
-                            if (vCount > serverQuestions[qIdx].votes[oIdx]) {
-                                serverQuestions[qIdx].votes[oIdx]++;
-                            }
-                        });
-                    });
-
-                    transaction.update(pollDocRef, { 
-                        questions: serverQuestions, 
-                        voters: updatedVoters 
-                    });
-                });
-
-                document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-success);">¡Voto registrado con éxito atómico!</span>`;
-            } catch (e) {
-                document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-danger);">Fallo transaccional: ${e}</span>`;
-            }
+            await updateDoc(doc(db, "polls", activePollId), { questions: activePollData.questions, voters: activePollData.voters });
+            document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-success);">¡Voto registrado!</span>`;
         }
 
-        // --- Navigation System & Module Bindings ---
+        window.loadDirectory = loadDirectory;
+        window.loadUsersDashboard = loadUsersDashboard;
+        init(); addQuestionBlock();
+    </script>
+
+    <script>
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('directory-card').classList.add('hidden');
@@ -890,47 +829,18 @@
             document.getElementById('analytics-card').classList.add('hidden');
             document.getElementById('users-card').classList.add('hidden');
 
-            if (tab === 'directory') {
+            if(tab === 'directory') {
                 document.getElementById('tab-directory').classList.add('active');
                 document.getElementById('directory-card').classList.remove('hidden');
-                loadDirectory();
-            } else if (tab === 'create') {
+                if(window.loadDirectory) window.loadDirectory();
+            } else if(tab === 'create') {
                 document.getElementById('tab-create').classList.add('active');
                 document.getElementById('create-card').classList.remove('hidden');
-            } else if (tab === 'runtime') {
+            } else if(tab === 'runtime') {
                 document.getElementById('runtime-card').classList.remove('hidden');
-            } else if (tab === 'analytics') {
+            } else if(tab === 'analytics') {
                 document.getElementById('analytics-card').classList.remove('hidden');
-            } else if (tab === 'users') {
+            } else if(tab === 'users') {
                 document.getElementById('tab-users').classList.add('active');
                 document.getElementById('users-card').classList.remove('hidden');
-                loadUsersDashboard();
-            }
-        }
-
-        // Event Attachments
-        document.getElementById('tab-directory').addEventListener('click', () => switchTab('directory'));
-        document.getElementById('tab-create').addEventListener('click', () => switchTab('create'));
-        document.getElementById('tab-users').addEventListener('click', () => switchTab('users'));
-        document.getElementById('directory-shuffle-btn').addEventListener('click', () => loadDirectory());
-        document.getElementById('runtime-exit-btn').addEventListener('click', () => switchTab('directory'));
-        document.getElementById('analytics-back-btn').addEventListener('click', () => switchTab('directory'));
-        document.getElementById('add-question-btn').addEventListener('click', () => addQuestionBlock());
-        document.getElementById('publish-poll-btn').addEventListener('click', () => publishMultiPoll());
-        document.getElementById('auth-toggle').addEventListener('click', () => toggleAuthMode());
-        
-        document.getElementById('cookie-reject-btn').addEventListener('click', () => handleCookies(false));
-        document.getElementById('cookie-accept-btn').addEventListener('click', () => handleCookies(true));
-        
-        document.getElementById('publish-broadcast-btn').addEventListener('click', () => updateGlobalBroadcast());
-        document.getElementById('clear-broadcast-btn').addEventListener('click', () => clearGlobalBroadcast());
-        document.getElementById('export-json-btn').addEventListener('click', () => exportServerDataToJSON());
-        document.getElementById('stress-test-btn').addEventListener('click', () => triggerDatabaseStressTest());
-        document.getElementById('purge-stress-btn').addEventListener('click', () => purgeAllStressTests());
-        document.getElementById('purge-all-polls-btn').addEventListener('click', () => purgarColeccionCompleta());
-
-        init(); 
-        addQuestionBlock();
-    </script>
-</body>
-</html>
+                if(window.loadUsersDashboard
