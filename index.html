@@ -3,176 +3,934 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fends | Tu mundo en video</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Global Polls - Material You</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
-        body { background-color: #000; color: white; overflow: hidden; }
-
-        /* Contenedor principal de videos (Snap Scroll) */
-        .app-container {
-            height: 100vh;
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
+        :root {
+            --md-bg: #141218;
+            --md-surface: #1d1b20;
+            --md-surface-variant: #2b2930;
+            --md-primary: #a8c7fa;
+            --md-on-primary: #063254;
+            --md-secondary-container: #334458;
+            --md-on-secondary-container: #d2e4ff;
+            --md-text: #e6e1e5;
+            --md-text-variant: #c4c6d0;
+            --md-outline: #938f99;
+            --md-danger: #ffb4ab;
+            --md-on-danger: #690005;
+            --md-success: #b4f1b4;
+            --md-warning: #ffe082;
+            --md-motion-fluid: cubic-bezier(0.2, 0, 0, 1);
         }
 
-        .video-card {
-            height: 100vh;
-            width: 100%;
-            scroll-snap-align: start;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #121212;
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Video de fondo */
-        .video-player {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Interfaz sobre el video */
-        .overlay {
-            position: absolute;
-            bottom: 80px;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .video-info h3 { margin-bottom: 8px; font-size: 1.2rem; }
-        .video-info p { font-size: 0.9rem; opacity: 0.9; }
-
-        /* Barra lateral de acciones */
-        .side-bar {
+        body {
+            background-color: var(--md-bg);
+            color: var(--md-text);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 20px;
             align-items: center;
-            margin-bottom: 20px;
+            padding: 16px;
+            overflow-x: hidden;
         }
 
-        .action-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            text-align: center;
-            transition: transform 0.2s;
+        /* Animations & Transitions */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .action-btn:active { transform: scale(0.9); }
-        .action-btn i { font-size: 28px; display: block; }
-        .action-btn span { font-size: 12px; margin-top: 5px; display: block; }
-
-        .profile-pic {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid white;
-            margin-bottom: 10px;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        /* Navegación inferior */
-        .nav-bottom {
-            position: fixed;
-            bottom: 0;
+        .app-container {
             width: 100%;
-            height: 60px;
-            background: black;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 0.5px solid #333;
+            max-width: 460px;
+            margin-top: 8px;
+            will-change: transform, opacity;
         }
 
-        .nav-item { color: #888; text-decoration: none; font-size: 20px; }
-        .nav-item.active { color: white; }
-        .upload-btn {
-            background: white;
-            color: black;
-            padding: 5px 15px;
-            border-radius: 8px;
-            font-weight: bold;
+        .card {
+            background-color: var(--md-surface);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            animation: fadeInUp 0.45s var(--md-motion-fluid) both;
+            transition: transform 0.25s var(--md-motion-fluid), box-shadow 0.25s var(--md-motion-fluid);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        h2 { font-size: 1.35rem; margin-bottom: 18px; font-weight: 500; color: var(--md-text); }
+        h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--md-text-variant); font-weight: 500; }
+        
+        input, textarea {
+            width: 100%; background-color: var(--md-surface-variant); border: 1px solid var(--md-outline);
+            padding: 16px; border-radius: 16px; color: var(--md-text); margin-bottom: 16px; outline: none;
+            font-size: 1rem; transition: all 0.2s var(--md-motion-fluid);
+        }
+        input:focus, textarea:focus { border-color: var(--md-primary); border-width: 2px; box-shadow: 0 0 0 4px rgba(168, 199, 250, 0.15); }
+
+        button {
+            width: 100%; padding: 14px 24px; border-radius: 100px; border: 1px solid var(--md-outline);
+            background-color: transparent; color: var(--md-primary); cursor: pointer;
+            font-weight: 500; font-size: 0.95rem; transition: all 0.25s var(--md-motion-fluid); 
+            text-align: center; margin-bottom: 8px;
+            position: relative; overflow: hidden;
+        }
+        button:hover { background-color: rgba(168, 199, 250, 0.08); transform: translateY(-1px); }
+        button:active { transform: scale(0.97); }
+
+        .submit-btn {
+            background-color: var(--md-primary); color: var(--md-on-primary); border: none; font-weight: 600; margin-top: 8px;
+        }
+        .submit-btn:hover { background-color: #c2dbff; box-shadow: 0 6px 16px rgba(168,199,250,0.25); }
+
+        .poll-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        
+        .poll-item { 
+            padding: 20px; background-color: var(--md-surface-variant); border-radius: 16px; 
+            margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; border: 1px solid transparent;
+            transition: all 0.25s var(--md-motion-fluid);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .poll-item:hover { background-color: #35333a; transform: scale(1.02); border-color: rgba(168, 199, 250, 0.2); }
+        .poll-header-box { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        .badge { font-size: 0.75rem; padding: 6px 12px; border-radius: 8px; font-weight: 500; letter-spacing: 0.3px; }
+        .badge.owner { background-color: rgba(255, 180, 171, 0.15); color: var(--md-danger); }
+        .badge.admin { background-color: rgba(255, 224, 130, 0.15); color: var(--md-warning); }
+        .badge.mod { background-color: rgba(180, 241, 180, 0.15); color: var(--md-success); }
+        .badge.user { background-color: rgba(255, 255, 255, 0.08); color: var(--md-text-variant); }
+        
+        .tabs { display: flex; gap: 8px; width: 100%; max-width: 460px; margin-bottom: 16px; }
+        .tab-btn { 
+            text-align: center; padding: 12px 4px; font-size: 0.9rem; background-color: transparent; 
+            border-radius: 100px; flex: 1; border: none; color: var(--md-text-variant); margin: 0;
+        }
+        .tab-btn.active { 
+            background-color: var(--md-secondary-container); color: var(--md-on-secondary-container); font-weight: 600; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .hidden { display: none !important; }
+        .share-link { margin-top: 14px; font-size: 0.85rem; color: var(--md-primary); word-break: break-all; text-align: center; }
+        .q-builder-block { background-color: var(--md-surface-variant); padding: 16px; border-radius: 16px; margin-bottom: 16px; animation: fadeInUp 0.35s var(--md-motion-fluid); border: 1px solid rgba(255,255,255,0.02); }
+        .auth-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--md-text-variant); cursor: pointer; transition: color 0.2s; }
+        .auth-footer:hover { color: var(--md-primary); }
+        .user-tag { font-size: 0.85rem; color: var(--md-text-variant); margin-bottom: 12px; text-align: right; font-weight: 500; display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
+
+        .metric-row { margin-bottom: 12px; background-color: var(--md-surface-variant); padding: 16px; border-radius: 16px; }
+        .metric-bar-bg { background-color: rgba(255, 255, 255, 0.06); height: 8px; border-radius: 100px; overflow: hidden; margin-top: 10px; }
+        .metric-bar-fill { height: 100%; background-color: var(--md-primary); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .action-btn { padding: 8px 16px; font-size: 0.8rem; border-radius: 100px; width: auto; margin-right: 6px; font-weight: 500; display: inline-block; text-align: center; border: none; margin-bottom: 4px; transition: background-color 0.2s, transform 0.2s; }
+        .action-btn:active { transform: scale(0.95); }
+        .btn-danger { background-color: rgba(255, 180, 171, 0.15); color: var(--md-danger); }
+        .btn-danger:hover { background-color: rgba(255, 180, 171, 0.25); }
+        .btn-warning { background-color: rgba(255, 224, 130, 0.15); color: var(--md-warning); }
+        .btn-warning:hover { background-color: rgba(255, 224, 130, 0.25); }
+        .btn-success { background-color: rgba(180, 241, 180, 0.15); color: var(--md-success); }
+        .btn-success:hover { background-color: rgba(180, 241, 180, 0.25); }
+
+        .search-container {
+            background-color: var(--md-surface-variant);
+            border-radius: 100px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .search-container:focus-within { border-color: var(--md-primary); }
+        .search-container input { background: transparent; border: none; margin: 0; padding: 12px 16px; }
+
+        .cookie-banner {
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 32px); max-width: 420px; background-color: var(--md-surface-variant);
+            border-radius: 24px; padding: 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.6); z-index: 9999; display: flex; flex-direction: column; gap: 14px;
+            animation: fadeInUp 0.45s var(--md-motion-fluid);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .broadcast-banner {
+            width: 100%; max-width: 460px; background-color: var(--md-secondary-container);
+            color: var(--md-on-secondary-container); padding: 14px 18px; border-radius: 20px;
+            margin-bottom: 16px; font-size: 0.9rem; font-weight: 500; line-height: 1.4;
+            animation: fadeInUp 0.5s ease; border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <section class="video-card">
-            <video class="video-player" loop onclick="this.paused ? this.play() : this.pause()">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1282-large.mp4" type="video/mp4">
-            </video>
+    <div id="app-broadcast" class="broadcast-banner hidden"></div>
 
-            <div class="overlay">
-                <div class="video-info">
-                    <h3>@usuario_fends</h3>
-                    <p>Disfrutando del estilo moderno de mi nueva red social #Fends 🚀</p>
-                </div>
-
-                <div class="side-bar">
-                    <img src="https://i.pravatar.cc/150?u=1" class="profile-pic" alt="Avatar">
-                    <button class="action-btn" onclick="toggleLike(this)">
-                        <i class="fas fa-heart"></i>
-                        <span>1.2k</span>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-comment-dots"></i>
-                        <span>85</span>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-bookmark"></i>
-                        <span>24</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section class="video-card">
-            <video class="video-player" loop onclick="this.paused ? this.play() : this.pause()">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-leaves-low-angle-shot-1571-large.mp4" type="video/mp4">
-            </video>
-            <div class="overlay">
-                <div class="video-info">
-                    <h3>@creador_fends</h3>
-                    <p>Diseño simple pero elegante. #Minimalismo #Fends</p>
-                </div>
-                <div class="side-bar">
-                    <img src="https://i.pravatar.cc/150?u=2" class="profile-pic">
-                    <button class="action-btn"><i class="fas fa-heart"></i><span>500</span></button>
-                    <button class="action-btn"><i class="fas fa-comment-dots"></i><span>12</span></button>
-                    <button class="action-btn"><i class="fas fa-bookmark"></i><span>5</span></button>
-                </div>
-            </div>
-        </section>
-
+    <div id="cookie-banner" class="cookie-banner hidden">
+        <div style="font-size: 0.9rem; color: var(--md-text-variant); line-height: 1.4;">Este sitio utiliza cookies para mantener su sesión iniciada de forma segura.</div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button style="width: auto; border: none; margin: 0; padding: 10px 20px;" id="cookie-reject-btn">Rechazar</button>
+            <button style="width: auto; background-color: var(--md-primary); color: var(--md-on-primary); border: none; margin: 0; padding: 10px 20px;" id="cookie-accept-btn">Aceptar</button>
+        </div>
     </div>
 
-    <nav class="nav-bottom">
-        <a href="#" class="nav-item active"><i class="fas fa-home"></i></a>
-        <a href="#" class="nav-item"><i class="fas fa-search"></i></a>
-        <a href="#" class="nav-item upload-btn"><i class="fas fa-plus"></i></a>
-        <a href="#" class="nav-item"><i class="fas fa-heart"></i></a>
-        <a href="#" class="nav-item"><i class="fas fa-user"></i></a>
-    </nav>
+    <div class="app-container" id="auth-gateway">
+        <div class="card">
+            <h2 id="auth-title">Iniciar Sesión</h2>
+            <input type="text" id="auth-username" placeholder="Usuario" autocomplete="username">
+            <input type="password" id="auth-password" placeholder="Contraseña" autocomplete="current-password">
+            <button class="submit-btn" id="auth-primary-btn">Entrar</button>
+            <div class="auth-footer" id="auth-toggle">¿No tienes una cuenta? Regístrate</div>
+        </div>
+    </div>
 
-    <script>
-        // Función simple para el Like (Visual)
-        function toggleLike(btn) {
-            const icon = btn.querySelector('i');
-            icon.style.color = icon.style.color === 'red' ? 'white' : 'red';
-            // Aquí iría tu conexión a la DB más tarde
+    <div class="hidden" id="main-application" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-directory">Explorar</button>
+            <button class="tab-btn" id="tab-create">Crear</button>
+            <button class="tab-btn hidden" id="tab-users">SYS_ROOT</button>
+        </div>
+
+        <div class="app-container" id="card-wrapper">
+            <div class="user-tag" id="user-display">@usuario</div>
+
+            <div id="directory-card" class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Encuestas Disponibles</h2>
+                    <button style="width:auto; padding:8px 20px; font-size:0.85rem; margin:0;" class="submit-btn" id="directory-shuffle-btn">Mezclar</button>
+                </div>
+                <div id="directory-container"></div>
+            </div>
+
+            <div id="runtime-card" class="card hidden">
+                <h2 id="runtime-title">Respondiendo Encuesta</h2>
+                <div id="runtime-question-box">
+                    <h3 id="current-q-text" style="color:var(--md-text); font-size:1.1rem; margin-bottom:24px; line-height:1.4;"></h3>
+                    <div class="poll-options" id="runtime-options"></div>
+                </div>
+                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:24px;" id="runtime-exit-btn">Salir</button>
+            </div>
+
+            <div id="analytics-card" class="card hidden">
+                <h2>Resultados en Tiempo Real</h2>
+                <div id="analytics-container"></div>
+                <button class="submit-btn" style="background-color:transparent; color:var(--md-text-variant); border:1px solid var(--md-outline); margin-top:16px;" id="analytics-back-btn">Volver</button>
+            </div>
+
+            <div id="create-card" class="card hidden">
+                <h2>Nueva Multi-Encuesta</h2>
+                <input type="text" id="poll-title-input" placeholder="Título global de la encuesta">
+                <div id="questions-builder-container"></div>
+                <button type="button" style="margin-bottom:16px;" id="add-question-btn">+ Añadir Pregunta</button>
+                <button class="submit-btn" id="publish-poll-btn">Publicar Encuesta</button>
+                <div id="share-area" class="share-link"></div>
+            </div>
+
+            <div id="users-card" class="card hidden">
+                <h2>Consola Operativa Global</h2>
+                
+                <div style="background-color: var(--md-surface-variant); padding: 20px; border-radius: 20px; margin-bottom: 24px;">
+                    <h3 style="color: var(--md-text); margin-bottom: 12px;">HERRAMIENTAS ESTRUCTURALES</h3>
+                    <button class="action-btn btn-success" style="width:100%; padding:12px; display:block; margin-bottom:8px; text-align:left;" id="export-json-btn">📦 Exportar Base de Datos (JSON)</button>
+                    
+                    <h3 style="color: var(--md-text); margin-top:16px; margin-bottom: 6px;">TRANSMISIÓN GLOBAL (BROADCAST)</h3>
+                    <input type="text" id="broadcast-input" placeholder="Escribe un anuncio para todos los usuarios..." style="padding:12px; margin-bottom:8px;">
+                    <div style="display:flex; gap:8px;">
+                        <button class="submit-btn" style="margin:0; padding:10px; font-size:0.85rem;" id="publish-broadcast-btn">Publicar</button>
+                        <button class="action-btn btn-danger" style="margin:0; padding:10px; font-size:0.85rem; width:auto; flex:1;" id="clear-broadcast-btn">Eliminar Banner</button>
+                    </div>
+                </div>
+
+                <div style="background-color: var(--md-surface-variant); padding: 20px; border-radius: 20px; margin-bottom: 24px;">
+                    <h3 style="color: var(--md-text); font-size: 0.9rem; margin-bottom: 8px;">MANTENIMIENTO DE CARGA</h3>
+                    <div style="display:flex; gap:10px; margin-bottom:12px;">
+                        <input type="number" id="stress-count" value="20" min="1" max="150" style="margin:0; padding:12px; font-size:0.9rem; width:80px; text-align:center;">
+                        <button class="submit-btn" style="margin:0; padding:12px; font-size:0.85rem;" id="stress-test-btn">Inyectar</button>
+                    </div>
+                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block;" id="purge-stress-btn">Limpiar Stress Tests</button>
+                    <button class="action-btn btn-danger" style="width:100%; padding:12px; display:block; margin-top:8px; background-color: rgba(255, 180, 171, 0.3);" id="purge-all-polls-btn">Borrar Todas las Encuestas Existentes</button>
+                    <div id="stress-log" style="font-size: 0.8rem; color: var(--md-success); margin-top: 10px;"></div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <h3>Usuarios Encontrados</h3>
+                    <div class="search-container">
+                        <input type="text" id="user-search-input" placeholder="Buscar usuario por nombre...">
+                    </div>
+                </div>
+                <div id="users-container" style="display:flex; flex-direction:column; gap:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDK9Vgz0-dnitjzARY4GwwPvXy0oyX_ngg",
+            authDomain: "fennq-polls.firebaseapp.com",
+            projectId: "fennq-polls",
+            storageBucket: "fennq-polls.firebasestorage.app",
+            messagingSenderId: "874994311761",
+            appId: "1:874994311761:web:85823caee2062f31b64e70"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentUser = null; 
+        let currentUserRole = "user"; 
+        let isSignUpMode = false;
+        let questionCounter = 0;
+        
+        let activePollData = null;
+        let activePollId = null;
+        let currentQuestionIdx = 0;
+        let cachedUsersList = [];
+
+        const DEFAULTO_OWNER = "fennq";
+
+        // --- SECURITY: SHA-256 Hashing Implementation ---
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
+
+        // --- SECURITY: HTML Context Sanitizer (Anti-XSS Mitigation) ---
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;'
+            }[m]));
+        }
+
+        const getCookie = (name) => {
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? match[2] : null;
+        };
+
+        const setCookie = (name, value, days) => {
+            if (getCookie("cookies_allowed") === "false") return;
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
+        };
+
+        const handleCookies = (allow) => {
+            document.cookie = "cookies_allowed=" + allow + "; max-age=" + (365 * 24 * 60 * 60) + "; path=/; SameSite=Strict; Secure";
+            document.getElementById('cookie-banner').classList.add('hidden');
+            if (allow && currentUser) { setCookie("saved_user", currentUser, 365); }
+        };
+
+        async function setupAdminAccount() {
+            const adminRef = doc(db, "users", DEFAULTO_OWNER);
+            const securedHash = await hashPassword("StarFennqFreudLord-2000");
+            await setDoc(adminRef, { 
+                password: securedHash, 
+                username: DEFAULTO_OWNER,
+                role: "owner" 
+            }, { merge: true });
+        }
+
+        async function downloadBroadcastSystem() {
+            try {
+                const docSnap = await getDoc(doc(db, "system", "config"));
+                const banner = document.getElementById("app-broadcast");
+                if (docSnap.exists() && docSnap.data().broadcast) {
+                    banner.textContent = docSnap.data().broadcast;
+                    banner.classList.remove("hidden");
+                } else {
+                    banner.classList.add("hidden");
+                }
+            } catch (e) { console.log("System broadcast idle."); }
+        }
+
+        async function init() {
+            document.getElementById('auth-gateway').classList.remove('hidden');
+            document.getElementById('main-application').classList.add('hidden');
+
+            await setupAdminAccount();
+            await downloadBroadcastSystem();
+
+            if (!getCookie("cookies_allowed")) {
+                if (document.getElementById('cookie-banner')) document.getElementById('cookie-banner').classList.remove('hidden');
+            }
+            
+            let savedUser = getCookie("saved_user");
+            if (savedUser) {
+                currentUser = savedUser.toLowerCase();
+                await fetchUserRoleAndEnter();
+            }
+
+            document.getElementById('user-search-input').addEventListener('input', (e) => {
+                renderFilteredUsers(e.target.value.trim().toLowerCase());
+            });
+        }
+
+        async function fetchUserRoleAndEnter() {
+            const userSnap = await getDoc(doc(db, "users", currentUser));
+            if (userSnap.exists()) {
+                currentUserRole = userSnap.data().role || "user";
+                if (currentUser === DEFAULTO_OWNER) currentUserRole = "owner"; 
+            } else {
+                currentUserRole = "user";
+            }
+            enterApp(currentUser);
+        }
+
+        document.getElementById('auth-primary-btn').addEventListener('click', async () => {
+            const user = document.getElementById('auth-username').value.trim().toLowerCase();
+            const pass = document.getElementById('auth-password').value;
+
+            if (!user || !pass) return alert("Complete los campos.");
+            if (!/^[a-z0-9_]{3,16}$/.test(user)) return alert("Usuario inválido (mínimo 3-16 caracteres alfanuméricos o guion bajo).");
+
+            const userRef = doc(db, "users", user);
+            const userSnap = await getDoc(userRef);
+            const clientHash = await hashPassword(pass);
+
+            if (isSignUpMode) {
+                if (user === DEFAULTO_OWNER) return alert("Nombre reservado.");
+                if (userSnap.exists()) return alert("El usuario ya existe.");
+                await setDoc(userRef, { password: clientHash, username: user, role: "user" });
+                alert("Cuenta creada.");
+                toggleAuthMode();
+            } else {
+                if (!userSnap.exists()) return alert("Usuario no encontrado.");
+                if (userSnap.data().password !== clientHash) return alert("Contraseña incorrecta.");
+                
+                currentUser = user;
+                setCookie("saved_user", user, 365);
+                await fetchUserRoleAndEnter();
+            }
+        });
+
+        function enterApp(username) {
+            document.getElementById('auth-gateway').classList.add('hidden');
+            document.getElementById('main-application').classList.remove('hidden');
+            
+            let badgeText = `<span class="badge user">User</span>`;
+            if (currentUserRole === "owner") badgeText = `<span class="badge owner">Owner</span>`;
+            if (currentUserRole === "admin") badgeText = `<span class="badge admin">Admin</span>`;
+            if (currentUserRole === "mod") badgeText = `<span class="badge mod">Mod</span>`;
+            
+            document.getElementById('user-display').innerHTML = `@${escapeHTML(username)} ${badgeText}`;
+            
+            if (["owner", "admin", "mod"].includes(currentUserRole)) {
+                document.getElementById('tab-users').classList.remove('hidden');
+            }
+            loadDirectory();
+        }
+
+        const updateGlobalBroadcast = async () => {
+            if (!["owner", "admin"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+            const text = document.getElementById("broadcast-input").value.trim();
+            if (!text) return alert("Escribe un mensaje válido.");
+            
+            await setDoc(doc(db, "system", "config"), { broadcast: text }, { merge: true });
+            alert("Broadcast publicado globalmente.");
+            downloadBroadcastSystem();
+        };
+
+        const clearGlobalBroadcast = async () => {
+            if (!["owner", "admin"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+            await setDoc(doc(db, "system", "config"), { broadcast: "" }, { merge: true });
+            document.getElementById("broadcast-input").value = "";
+            alert("Broadcast eliminado.");
+            downloadBroadcastSystem();
+        };
+
+        const exportServerDataToJSON = async () => {
+            if (!["owner", "admin", "mod"].includes(currentUserRole)) return alert("Permisos insuficientes.");
+            try {
+                const querySnapshot = await getDocs(collection(db, "polls"));
+                let outputData = [];
+                querySnapshot.forEach(d => { outputData.push({ id: d.id, ...d.data() }); });
+
+                const blob = new Blob([JSON.stringify(outputData, null, 2)], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `polls_backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                alert("Error compilando JSON estructural: " + e.message);
+            }
+        };
+
+        const toggleAuthMode = () => {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-title').textContent = isSignUpMode ? "Crear Cuenta" : "Iniciar Sesión";
+            document.getElementById('auth-primary-btn').textContent = isSignUpMode ? "Registrarse" : "Entrar";
+            document.getElementById('auth-toggle').textContent = isSignUpMode ? "¿Ya tienes una cuenta? Inicia Sesión" : "¿No tienes una cuenta? Regístrate";
+        };
+
+        const addQuestionBlock = () => {
+            questionCounter++;
+            const container = document.getElementById('questions-builder-container');
+            const block = document.createElement('div');
+            block.className = 'q-builder-block';
+            block.innerHTML = `
+                <h3>Pregunta #${questionCounter}</h3>
+                <input type="text" class="q-title" placeholder="¿Cuál es la pregunta?">
+                <input type="text" class="q-opt" placeholder="Opción A">
+                <input type="text" class="q-opt" placeholder="Opción B">
+                <input type="text" class="q-opt" placeholder="Opción C">
+                <input type="text" class="q-opt" placeholder="Opción D">
+            `;
+            container.appendChild(block);
+        };
+
+        const publishMultiPoll = async () => {
+            const title = document.getElementById('poll-title-input').value.trim();
+            const blocks = document.querySelectorAll('.q-builder-block');
+            const questionsArray = [];
+
+            if (!title || blocks.length === 0) return alert("Rellenene los datos mínimos.");
+
+            blocks.forEach(block => {
+                const qText = block.querySelector('.q-title').value.trim();
+                const optInputs = block.querySelectorAll('.q-opt');
+                const options = [];
+                const votes = [];
+
+                optInputs.forEach(input => {
+                    if (input.value.trim() !== "") {
+                        options.push(input.value.trim());
+                        votes.push(0);
+                    }
+                });
+
+                if (qText && options.length >= 2) {
+                    questionsArray.push({ question: qText, options, votes });
+                }
+            });
+
+            if (questionsArray.length === 0) return alert("Escriba al menos 1 pregunta válida con 2 opciones.");
+
+            // Standard secure Firebase ID generation
+            const pollCollectionRef = collection(db, "polls");
+            const newPollRef = doc(pollCollectionRef); 
+            
+            await setDoc(newPollRef, {
+                title, creatorId: currentUser, questions: questionsArray, voters: []
+            });
+
+            document.getElementById('share-area').innerHTML = `¡Publicada!<br>ID: <strong>${newPollRef.id}</strong>`;
+            document.getElementById('poll-title-input').value = '';
+            document.getElementById('questions-builder-container').innerHTML = '';
+            questionCounter = 0;
+            addQuestionBlock();
+            loadDirectory();
+        };
+
+        const triggerDatabaseStressTest = async () => {
+            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
+            const iterations = parseInt(document.getElementById('stress-count').value) || 10;
+            const logBox = document.getElementById('stress-log');
+            logBox.style.color = "var(--md-warning)";
+            logBox.textContent = `Ejecutando inyección de ${iterations} nodos...`;
+
+            try {
+                let promises = [];
+                for (let i = 1; i <= iterations; i++) {
+                    const mockRef = doc(collection(db, "polls"));
+                    promises.push(setDoc(mockRef, {
+                        title: `StressTest Node #${i} (${Math.floor(Math.random()*10000)})`,
+                        creatorId: "system_tester",
+                        voters: [],
+                        questions: [ { question: "Prueba de carga A", options: ["Nodo X", "Nodo Y"], votes: [0, 0] } ]
+                    }));
+                }
+                await Promise.all(promises);
+                logBox.style.color = "var(--md-success)";
+                logBox.textContent = `Inyección finalizada con ${iterations} documentos nuevos.`;
+                loadDirectory();
+            } catch (e) {
+                logBox.style.color = "var(--md-danger)";
+                logBox.textContent = `Error: ${e.message}`;
+            }
+        };
+
+        const purgeAllStressTests = async () => {
+            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
+            const logBox = document.getElementById('stress-log');
+            logBox.style.color = "var(--md-warning)";
+            logBox.textContent = "Escaneando documentos de prueba en el servidor...";
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "polls"));
+                let promises = [];
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.id.startsWith("stress_") || docSnap.data().creatorId === "system_tester") {
+                        promises.push(deleteDoc(doc(db, "polls", docSnap.id)));
+                    }
+                });
+                await Promise.all(promises);
+                logBox.style.color = "var(--md-success)";
+                logBox.textContent = `Purga completada con éxito.`;
+                loadDirectory();
+            } catch (e) {
+                logBox.style.color = "var(--md-danger)";
+                logBox.textContent = `Error: ${e.message}`;
+            }
+        };
+
+        const purgarColeccionCompleta = async () => {
+            if (!["owner", "admin"].includes(currentUserRole)) return alert("Acción denegada.");
+            if (!confirm("Advertencia: Esta acción destruirá absolutamente todas las encuestas de forma irreversible.")) return;
+            const logBox = document.getElementById('stress-log');
+            logBox.style.color = "var(--md-warning)";
+            logBox.textContent = "Iniciando purga total...";
+
+            try {
+                const snapshot = await getDocs(collection(db, "polls"));
+                let promises = [];
+                snapshot.forEach(d => { promises.push(deleteDoc(doc(db, "polls", d.id))); });
+                await Promise.all(promises);
+                logBox.style.color = "var(--md-success)";
+                logBox.textContent = `Vaciado completo del servidor realizado.`;
+                loadDirectory();
+            } catch (e) {
+                logBox.style.color = "var(--md-danger)";
+                logBox.textContent = `Error: ${e.message}`;
+            }
+        };
+
+        function checkCanDeletePoll(creatorId) {
+            if (["owner", "admin"].includes(currentUserRole)) return true;
+            if (currentUserRole === "mod" && creatorId !== "fennq") return true;
+            return currentUser === creatorId;
+        }
+
+        async function loadDirectory() {
+            const container = document.getElementById('directory-container');
+            if (!container) return;
+            container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant);">Mezclando estructuras aleatorias...</div>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "polls"));
+                let rawList = [];
+                querySnapshot.forEach(d => { rawList.push({id: d.id, ...d.data()}); });
+
+                for (let i = rawList.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [rawList[i], rawList[j]] = [rawList[j], rawList[i]];
+                }
+
+                let selectedList = rawList.slice(0, 5);
+                container.innerHTML = '';
+
+                if (selectedList.length === 0) {
+                    container.innerHTML = `<div style="color:var(--md-text-variant); text-align:center; padding:12px;">No hay encuestas públicas disponibles.</div>`;
+                    return;
+                }
+
+                selectedList.forEach((data) => {
+                    const isCreator = data.creatorId === currentUser;
+                    const canDelete = checkCanDeletePoll(data.creatorId);
+
+                    const item = document.createElement('div');
+                    item.className = 'poll-item';
+                    
+                    const headerBox = document.createElement('div');
+                    headerBox.className = 'poll-header-box';
+                    
+                    const titleSpan = document.createElement('span');
+                    titleSpan.style.fontWeight = "500";
+                    titleSpan.style.fontSize = "1.05rem";
+                    titleSpan.textContent = data.title || "Sin título";
+                    
+                    const badgeSpan = document.createElement('span');
+                    badgeSpan.className = 'badge user';
+                    badgeSpan.textContent = isCreator ? 'Mío' : 'Votar';
+                    
+                    headerBox.appendChild(titleSpan);
+                    headerBox.appendChild(badgeSpan);
+                    item.appendChild(headerBox);
+
+                    if (canDelete && ["owner", "admin", "mod"].includes(currentUserRole)) {
+                        const delBtn = document.createElement('button');
+                        delBtn.className = 'action-btn btn-danger'; 
+                        delBtn.textContent = "Purgar";
+                        delBtn.style.marginTop = "8px";
+                        delBtn.onclick = (e) => { e.stopPropagation(); destroyPoll(data.id); };
+                        item.appendChild(delBtn);
+                    }
+
+                    item.onclick = () => {
+                        activePollId = data.id; activePollData = data;
+                        if (isCreator || ["owner", "admin", "mod"].includes(currentUserRole)) { renderAnalytics(data); } else { startVotingSession(); }
+                    };
+                    container.appendChild(item);
+                });
+            } catch (e) {
+                container.innerHTML = `<div style="color:var(--md-danger);">Error de conexión con la base de datos.</div>`;
+            }
+        }
+
+        async function destroyPoll(id) {
+            if (confirm("¿Eliminar este documento permanentemente del servidor?")) {
+                await deleteDoc(doc(db, "polls", id));
+                loadDirectory();
+            }
+        }
+
+        async function updateUserRoleInDB(targetUserId, newRole) {
+            if (currentUserRole !== "owner") return alert("Acción denegada.");
+            await updateDoc(doc(db, "users", targetUserId), { role: newRole });
+            alert(`Rango actualizado.`);
+            loadUsersDashboard();
+        }
+
+        async function loadUsersDashboard() {
+            if (!["owner", "admin", "mod"].includes(currentUserRole)) return;
+            const container = document.getElementById('users-container');
+            if (!container) return;
+
+            try {
+                const snapshot = await getDocs(collection(db, "users"));
+                cachedUsersList = [];
+                snapshot.forEach(docSnap => { cachedUsersList.push({ id: docSnap.id, ...docSnap.data() }); });
+                renderFilteredUsers("");
+            } catch (e) {
+                container.innerHTML = "Fallo de comunicación con la consola.";
+            }
+        }
+
+        function renderFilteredUsers(filterText) {
+            const container = document.getElementById('users-container');
+            if (!container) return; container.innerHTML = '';
+
+            const filteredUsers = cachedUsersList.filter(user => user.username.toLowerCase().includes(filterText));
+            if (filteredUsers.length === 0) {
+                container.innerHTML = '<div style="font-size:0.9rem; color:var(--md-text-variant); padding:10px;">No se encontraron usuarios.</div>';
+                return;
+            }
+
+            filteredUsers.forEach(userData => {
+                const targetRole = userData.role || "user";
+                const uBox = document.createElement('div');
+                uBox.style.padding = "16px"; uBox.style.backgroundColor = "var(--md-surface-variant)";
+                uBox.style.borderRadius = "16px"; uBox.style.marginBottom = "8px";
+
+                let roleBadge = `<span class="badge user">User</span>`;
+                if (targetRole === "owner" || userData.username === DEFAULTO_OWNER) roleBadge = `<span class="badge owner">Owner</span>`;
+                else if (targetRole === "admin") roleBadge = `<span class="badge admin">Admin</span>`;
+                else if (targetRole === "mod") roleBadge = `<span class="badge mod">Mod</span>`;
+
+                // CRITICAL SECURITY FIX: Plaintext passwords are completely extracted from presentation layouts to prevent visibility hijacking.
+                uBox.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div><strong>@${escapeHTML(userData.username)}</strong></div>
+                        <div>${roleBadge}</div>
+                    </div>
+                `;
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.style.display = "flex"; actionsDiv.style.flexWrap = "wrap"; actionsDiv.style.gap = "6px";
+
+                if (currentUserRole === "owner" && userData.username !== currentUser && userData.username !== DEFAULTO_OWNER) {
+                    const setMod = document.createElement('button'); setMod.className = 'action-btn btn-success'; setMod.textContent = "Dar MOD";
+                    setMod.onclick = () => updateUserRoleInDB(userData.username, "mod");
+
+                    const setAdmin = document.createElement('button'); setAdmin.className = 'action-btn btn-warning'; setAdmin.textContent = "Dar ADMIN";
+                    setAdmin.onclick = () => updateUserRoleInDB(userData.username, "admin");
+
+                    const setNormal = document.createElement('button'); setNormal.className = 'action-btn btn-danger'; setNormal.textContent = "Quitar Rangos";
+                    setNormal.onclick = () => updateUserRoleInDB(userData.username, "user");
+
+                    actionsDiv.appendChild(setMod); actionsDiv.appendChild(setAdmin); actionsDiv.appendChild(setNormal);
+                }
+
+                if (actionsDiv.children.length > 0) { uBox.appendChild(actionsDiv); }
+                container.appendChild(uBox);
+            });
+        }
+
+        function renderAnalytics(data) {
+            switchTab('analytics');
+            const container = document.getElementById('analytics-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const titleEl = document.createElement('h3');
+            titleEl.textContent = data.title;
+            const metaEl = document.createElement('p');
+            metaEl.style.fontSize = "0.85rem";
+            metaEl.style.color = "var(--md-text-variant)";
+            metaEl.style.marginBottom = "24px";
+            metaEl.textContent = `Participantes: ${data.voters ? data.voters.length : 0}`;
+            
+            container.appendChild(titleEl);
+            container.appendChild(metaEl);
+
+            data.questions.forEach((q, qIdx) => {
+                const qBlock = document.createElement('div'); qBlock.style.style = "margin-bottom: 24px;";
+                
+                const strongTitle = document.createElement('strong');
+                strongTitle.style.display = "block";
+                strongTitle.style.marginBottom = "12px";
+                strongTitle.textContent = `Q${qIdx + 1}. ${q.question}`;
+                qBlock.appendChild(strongTitle);
+
+                const totalVotes = q.votes.reduce((a,b)=>a+b, 0);
+                q.options.forEach((opt, oIdx) => {
+                    const count = q.votes[oIdx] || 0;
+                    const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+                    
+                    const row = document.createElement('div'); row.className = 'metric-row';
+                    row.innerHTML = `
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>${escapeHTML(opt)}</span> <span style="color:var(--md-primary); font-weight:500;">${count} votos (${pct}%)</span>
+                        </div>
+                        <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-${qIdx}-${oIdx}"></div></div>
+                    `;
+                    qBlock.appendChild(row);
+                    setTimeout(() => {
+                        const el = document.getElementById(`bar-${qIdx}-${oIdx}`);
+                        if (el) el.style.width = `${pct}%`;
+                    }, 50);
+                });
+                container.appendChild(qBlock);
+            });
+        }
+
+        function startVotingSession() {
+            if (activePollData.voters && activePollData.voters.includes(currentUser)) return alert("Ya has votado aquí.");
+            switchTab('runtime'); currentQuestionIdx = 0; executeQuestionStep();
+        }
+
+        function executeQuestionStep() {
+            const qContainer = document.getElementById('runtime-options'); if (!qContainer) return;
+            qContainer.innerHTML = '';
+            if (currentQuestionIdx >= activePollData.questions.length) { saveFinalPollPayload(); return; }
+
+            const currentQ = activePollData.questions[currentQuestionIdx];
+            document.getElementById('runtime-title').textContent = `Pregunta ${currentQuestionIdx + 1} de ${activePollData.questions.length}`;
+            document.getElementById('current-q-text').textContent = currentQ.question;
+
+            currentQ.options.forEach((opt, idx) => {
+                const btn = document.createElement('button'); btn.type = "button"; btn.style.width = "100%";
+                btn.textContent = opt; btn.className = "submit-btn";
+                btn.style.backgroundColor = "var(--md-surface-variant)"; btn.style.color = "var(--md-text)";
+                btn.onclick = () => { activePollData.questions[currentQuestionIdx].votes[idx]++; currentQuestionIdx++; executeQuestionStep(); };
+                qContainer.appendChild(btn);
+            });
+        }
+
+        // --- SECURITY / BUG FIX: Atomicity via Firestore Transactions ---
+        async function saveFinalPollPayload() {
+            document.getElementById('current-q-text').textContent = "Guardando respuestas...";
+            document.getElementById('runtime-options').innerHTML = '';
+            
+            const pollDocRef = doc(db, "polls", activePollId);
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const sfDoc = await transaction.get(pollDocRef);
+                    if (!sfDoc.exists()) throw "La encuesta no existe.";
+
+                    let serverData = sfDoc.data();
+                    let updatedVoters = serverData.voters || [];
+                    
+                    if (updatedVoters.includes(currentUser)) throw "Ya has votado en este documento distribuido.";
+                    updatedVoters.push(currentUser);
+
+                    // Map local selections over live data payload safely
+                    let serverQuestions = serverData.questions;
+                    activePollData.questions.forEach((q, qIdx) => {
+                        q.votes.forEach((vCount, oIdx) => {
+                            if (vCount > serverQuestions[qIdx].votes[oIdx]) {
+                                serverQuestions[qIdx].votes[oIdx]++;
+                            }
+                        });
+                    });
+
+                    transaction.update(pollDocRef, { 
+                        questions: serverQuestions, 
+                        voters: updatedVoters 
+                    });
+                });
+
+                document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-success);">¡Voto registrado con éxito atómico!</span>`;
+            } catch (e) {
+                document.getElementById('current-q-text').innerHTML = `<span style="color:var(--md-danger);">Fallo transaccional: ${e}</span>`;
+            }
+        }
+
+        // --- Navigation System & Module Bindings ---
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('directory-card').classList.add('hidden');
+            document.getElementById('create-card').classList.add('hidden');
+            document.getElementById('runtime-card').classList.add('hidden');
+            document.getElementById('analytics-card').classList.add('hidden');
+            document.getElementById('users-card').classList.add('hidden');
+
+            if (tab === 'directory') {
+                document.getElementById('tab-directory').classList.add('active');
+                document.getElementById('directory-card').classList.remove('hidden');
+                loadDirectory();
+            } else if (tab === 'create') {
+                document.getElementById('tab-create').classList.add('active');
+                document.getElementById('create-card').classList.remove('hidden');
+            } else if (tab === 'runtime') {
+                document.getElementById('runtime-card').classList.remove('hidden');
+            } else if (tab === 'analytics') {
+                document.getElementById('analytics-card').classList.remove('hidden');
+            } else if (tab === 'users') {
+                document.getElementById('tab-users').classList.add('active');
+                document.getElementById('users-card').classList.remove('hidden');
+                loadUsersDashboard();
+            }
+        }
+
+        // Event Attachments
+        document.getElementById('tab-directory').addEventListener('click', () => switchTab('directory'));
+        document.getElementById('tab-create').addEventListener('click', () => switchTab('create'));
+        document.getElementById('tab-users').addEventListener('click', () => switchTab('users'));
+        document.getElementById('directory-shuffle-btn').addEventListener('click', () => loadDirectory());
+        document.getElementById('runtime-exit-btn').addEventListener('click', () => switchTab('directory'));
+        document.getElementById('analytics-back-btn').addEventListener('click', () => switchTab('directory'));
+        document.getElementById('add-question-btn').addEventListener('click', () => addQuestionBlock());
+        document.getElementById('publish-poll-btn').addEventListener('click', () => publishMultiPoll());
+        document.getElementById('auth-toggle').addEventListener('click', () => toggleAuthMode());
+        
+        document.getElementById('cookie-reject-btn').addEventListener('click', () => handleCookies(false));
+        document.getElementById('cookie-accept-btn').addEventListener('click', () => handleCookies(true));
+        
+        document.getElementById('publish-broadcast-btn').addEventListener('click', () => updateGlobalBroadcast());
+        document.getElementById('clear-broadcast-btn').addEventListener('click', () => clearGlobalBroadcast());
+        document.getElementById('export-json-btn').addEventListener('click', () => exportServerDataToJSON());
+        document.getElementById('stress-test-btn').addEventListener('click', () => triggerDatabaseStressTest());
+        document.getElementById('purge-stress-btn').addEventListener('click', () => purgeAllStressTests());
+        document.getElementById('purge-all-polls-btn').addEventListener('click', () => purgarColeccionCompleta());
+
+        init(); 
+        addQuestionBlock();
     </script>
 </body>
 </html>
